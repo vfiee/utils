@@ -1,0 +1,15 @@
+{
+  "name": "@v-utils/type",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "module": "dist/type.es.js",
+  "types": "dist/type.d.ts",
+  "keywords": [
+    "utils",
+    "type",
+    "typeof"
+  ],
+  "author": "vyron",
+  "license": "MIT"
+}
