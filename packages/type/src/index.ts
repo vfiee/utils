@@ -1,7 +1,7 @@
 /*
  * @Author: vyron
  * @Date: 2022-01-10 17:38:09
- * @LastEditTime: 2022-02-15 13:54:15
+ * @LastEditTime: 2022-02-27 21:55:51
  * @LastEditors: vyron
  * @Description: 判断数据类型
  * @FilePath: /v-utils/packages/type/src/index.ts
@@ -37,3 +37,7 @@ export const isWeakSet = (value: unknown): value is WeakSet<object> =>
 // 是否为 Object
 export const isObject = (value: unknown): value is object =>
   typeof value === 'object' && value !== null
+
+// 是否为字符串
+export const isString = (value: unknown): value is string =>
+  typeof value === 'string'

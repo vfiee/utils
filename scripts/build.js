@@ -1,7 +1,7 @@
 /*
  * @Author: vyron
  * @Date: 2022-02-14 14:25:44
- * @LastEditTime: 2022-02-15 13:56:46
+ * @LastEditTime: 2022-02-27 22:52:44
  * @LastEditors: vyron
  * @Description: build and output files
  * @FilePath: /v-utils/scripts/build.js
@@ -16,20 +16,23 @@ const { gzipSync } = require('zlib')
 const { compress } = require('brotli')
 
 const args = minimist(process.argv.slice(2))
-const isWatch = args.watch || args.w
-const formats = args.formats || args.f
-const sourceMap = args.sourcemap || args.s
-const buildTypes = args.t || args.types
 const isProd = process.env.NODE_ENV === 'production'
+const package = args.package || args.p // package name in packages
+const isWatch = args.watch || args.w // watching file change
+const formats = args.formats || args.f // iief cjs es
+const sourceMap = args.sourcemap || args.s // sourcemap or not
+const buildTypes = args.types || args.t // generate [package].d.ts or not
 const packagesDir = path.resolve(__dirname, '../packages')
 const packages = fs.readdirSync(packagesDir)
 const commit = execa.sync('git', ['rev-parse', 'HEAD']).stdout.slice(0, 7)
 
-run()
-
 async function run() {
-  await buildAll(packages)
-  isProd && checkAllSize(packages)
+  const targetPackages = package && package.split(',')
+  const buildPackages = targetPackages
+    ? packages.filter(package => targetPackages.includes(package))
+    : packages
+  await buildAll(buildPackages)
+  isProd && checkAllSize(buildPackages)
 }
 
 function buildAll(packages) {
@@ -54,7 +57,7 @@ async function build(package) {
         `COMMIT:${commit}`,
         `TARGET:${package}`,
         `NODE_ENV:${isProd ? 'production' : 'development'}`,
-        formats ? `FORMATS:${formats}` : ``,
+        formats ? `FORMATS:${formats.replace(/\,/g, '.')}` : ``,
         buildTypes ? `TYPES:true` : ``,
         sourceMap ? `SOURCE_MAP:true` : ``
       ]
@@ -63,7 +66,7 @@ async function build(package) {
     ].filter(Boolean),
     { stdio: 'inherit' }
   )
-  extractorTypes(package)
+  buildTypes && extractorTypes(package)
 }
 
 // 生成 ts 类型文件
@@ -112,3 +115,5 @@ function checkFileSize(filePath) {
     )} min:${minSize} / gzip:${gzippedSize} / brotli:${compressedSize}`
   )
 }
+
+run()

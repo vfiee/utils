@@ -16,7 +16,7 @@ const outputConfigs = ['es', 'cjs', 'iife'].reduce((config, format) => {
 }, {})
 
 const defaultFormats = ['es', 'cjs', 'iife']
-const envFormats = process.env.FORMATS && process.env.FORMATS.split(',')
+const envFormats = process.env.FORMATS && process.env.FORMATS.split('.')
 const packageFormats = envFormats || defaultFormats
 const packageConfigs = packageFormats.map(format =>
   createConfig(format, outputConfigs[format])
@@ -37,15 +37,16 @@ function createConfig(format, output, plugins = []) {
     console.log(require('chalk').yellow(`invalid format: "${format}"`))
     process.exit(1)
   }
-  output.sourcemap = !!process.env.SOURCE_MAP
+  output.sourcemap = process.env.SOURCE_MAP === 'true'
+  const shouldEmitTypes = process.env.TYPES === 'true'
   const tsPlugin = ts({
     check: isProd,
     tsconfig: path.resolve(__dirname, 'tsconfig.json'),
     tsconfigOverride: {
       compilerOptions: {
         sourceMap: output.sourcemap,
-        declaration: true,
-        declarationMap: true
+        declaration: shouldEmitTypes,
+        declarationMap: shouldEmitTypes
       },
       exclude: ['**/__tests__']
     }
@@ -65,7 +66,6 @@ function createConfig(format, output, plugins = []) {
   }
 }
 
-// 根据 format 转换名称
 function transformFormat(format) {
   const formats = {
     es: 'esm',
@@ -74,12 +74,10 @@ function transformFormat(format) {
   }
   return formats[format] || format
 }
-
 function createProdConfig(format) {
-  format = transformFormat(format)
   return createConfig(format, {
-    format,
-    file: resolve(`dist/${target}.${format}.prod.js`)
+    format: outputConfigs[format].format,
+    file: outputConfigs[format].file.replace(/\.js$/, '.prod.js')
   })
 }
 
@@ -88,8 +86,8 @@ function createMinifiedConfig(format) {
   return createConfig(
     format,
     {
-      file: outputConfigs[format].file.replace(/\.js$/, '.prod.js'),
-      format: outputConfigs[format].format
+      format: outputConfigs[format].format,
+      file: outputConfigs[format].file.replace(/\.js$/, '.prod.js')
     },
     [
       terser({

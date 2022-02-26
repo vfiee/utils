@@ -1,6 +1,6 @@
 {
   "name": "@v-utils/type",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "module": "dist/type.es.js",
@@ -11,5 +11,9 @@
     "typeof"
   ],
   "author": "vyron",
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }
