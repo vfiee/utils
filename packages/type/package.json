@@ -3,12 +3,19 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "module": "dist/type.es.js",
+  "module": "dist/type.esm.js",
   "types": "dist/type.d.ts",
   "keywords": [
     "utils",
     "type",
     "typeof"
+  ],
+  "files": [
+    "index.js",
+    "LICENSE",
+    "dist",
+    "package.json",
+    "README.md"
   ],
   "author": "vyron",
   "license": "MIT",

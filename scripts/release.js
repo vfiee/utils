@@ -56,7 +56,7 @@ const getPkg = (key, path = pkgPath) => {
 
 // 更新 package.json
 const updatePkg = (values = {}, path = pkgPath) => {
-  const pkg = getPkg()
+  const pkg = getPkg(null, path)
   for (const [key, value] of Object.entries(values)) {
     set(pkg, key, value)
   }
@@ -65,18 +65,17 @@ const updatePkg = (values = {}, path = pkgPath) => {
 
 // 1. 检测当前分支
 const checkCurrentBranch = async () => {
-  const spinner = progress('正在检查分支')
+  const spinner = progress('Checking git branch')
   spinner.start()
   const { stdout: branch } = await run('git', ['branch', '--show-current'], {
     stdio: 'pipe'
   })
-  if (!['main', 'master'].includes(branch)) {
-    spinner.fail(`当前分支不是 master 或 main`)
-    throw new Error(
-      'Release branch must be main or master, please checkout main or master branch and try it again!'
-    )
+  if (branch !== 'main') {
+    const notMainBranchMsg = `The current git branch is not main, switch to the main branch and try again!`
+    spinner.fail(notMainBranchMsg)
+    throw new Error(notMainBranchMsg)
   }
-  spinner.succeed(`当前分支为: ${branch}`)
+  spinner.succeed(`Current branch is ${branch}!`)
 }
 
 // 2. 单元测试
@@ -88,7 +87,7 @@ const runFormatAndEslint = async () => {
   await run('pnpm', ['format'])
 }
 
-// 2. 选择版本
+// 4. 选择版本
 const chooseVersion = async () => {
   let targetVersion = args._[0]
   if (!targetVersion) {
@@ -128,24 +127,39 @@ const chooseVersion = async () => {
   return targetVersion
 }
 
-// 3. 更新版本号
-const updateVersion = version => {
-  const spinner = progress('正在更新版本号').start()
+// 5. 更新版本号
+const updateVersion = async version => {
+  const spinner = progress('Updating version').start()
   updatePkg({ version })
   updatePackagesPkg(version)
-  spinner.succeed(`版本号更新成功,当前版本: ${version}`)
+  await run('pnpm', ['install', '--prefer-offline'])
+  spinner.succeed(`Update successful, current version: ${version}`)
 }
 
 const updatePackagesPkg = version => {
   const packages = fs.readdirSync(pkgDir)
+  const updatedDependencies = dependencies => {
+    Object.keys(dependencies).reduce((acc, dependency) => {
+      if (dependency.startsWith('@v-utils/')) {
+        acc[dependency] = version
+      }
+      return acc
+    }, dependencies)
+  }
   packages.forEach(package => {
-    updatePkg({ version }, path.resolve(pkgDir, `${package}/package.json`))
+    const pkgPath = path.resolve(pkgDir, `${package}/package.json`)
+    const { dependencies } = require(pkgPath)
+    const pkg = { version }
+    if (dependencies) {
+      pkg[dependencies] = updatedDependencies(dependencies)
+    }
+    updatePkg(pkg, pkgPath)
   })
 }
 
-// 4. 提交修改文件
+// 8. 提交修改文件
 const commitChanges = async () => {
-  const spinner = progress(`正在提交文件`).start()
+  const spinner = progress(`Committing files`).start()
   const { stdout } = await run('git', ['diff', '--ignore-submodules'], {
     stdio: 'pipe'
   })
@@ -157,52 +171,84 @@ const commitChanges = async () => {
   try {
     await run('git', ['add', '-A'])
     await run('git', ['commit', '-m', `release: v${version}`])
-    spinner.succeed(`all changes is commited`)
+    spinner.succeed(`All changes have been committed`)
   } catch (error) {
-    spinner.fail(`commit failed, error:${error}`)
+    spinner.fail(`Failed to commit, error:${error}`)
     throw error
   }
 }
 
-// 5. 打包应用
+// 6. 打包应用
 const buildPackage = async () => {
-  const spinner = progress(`start build`).start()
+  const spinner = progress(`Building packages`).start()
   try {
     await run('pnpm', ['build'], { stdio: 'ignore' })
-    spinner.succeed('build successed')
+    spinner.succeed('Build successfully')
   } catch (error) {
-    spinner.fail('build failed')
+    spinner.fail('Build failed')
     throw error
+  }
+}
+
+// 7.生成changelog
+const generateChangeLog = async () => {
+  const spinner = progress(`Generating changelog`).start()
+  try {
+    await run('pnpm', ['run', 'changelog'])
+    spinner.succeed('Generated successfully')
+  } catch (error) {
+    spinner.fail('Generate failed')
+    throw error
+  }
+}
+
+// 9.发布到npm
+const publishPackages = async () => {
+  const packages = fs.readdirSync(pkgDir)
+  for (const package of packages) {
+    await publishPackage(package)
   }
 }
 
 // 6. 发布到 npm
-const publishPackage = async () => {
-  const { name, version } = getPkg()
-  const spinner = progress('publishing to npm').start()
+const publishPackage = async package => {
+  const { name, version } = getPkg(
+    null,
+    path.resolve(pkgDir, `${package}/package.json`)
+  )
+  const releaseTag = getReleaseTag(version)
+  const spinner = progress('Publishing to npm').start()
   try {
     await run(
       'yarn',
-      ['publish', '--new-version', version, '--access', 'public'],
+      [
+        'publish',
+        '--new-version',
+        version,
+        ...(releaseTag ? ['--tag', releaseTag] : []),
+        '--access',
+        'public'
+      ],
       {
-        stdio: 'pipe'
+        stdio: 'pipe',
+        cwd: path.resolve(pkgDir, package)
       }
     )
-    spinner.succeed(`successfully publish ${name}@${version}`)
+    spinner.succeed(`Successfully publish ${name}@${version}`)
   } catch (e) {
-    spinner.fail(`publish failed, error: ${e}`)
+    spinner.fail(`Publish failed, error: ${e}`)
     throw e
   }
 }
 
-// 7. 发布到 github
+// 10.推送到 github
 const publishToGithub = async () => {
-  const spinner = progress(`publish to github`).start()
+  const spinner = progress(`Publishing to github`).start()
   const { stdout: remote } = await run('git', ['remote'], {
     stdio: 'pipe'
   })
   if (!remote) {
-    const msg = `publish failed because there is no remote branch`
+    const msg = `Publishing failed because of no remote branch`
     spinner.fail(msg)
     throw new Error(msg)
   }
@@ -212,11 +258,25 @@ const publishToGithub = async () => {
     await run('git', ['tag', `v${version}`])
     await run('git', ['push', 'origin', `refs/tags/v${version}`])
     await run('git', ['push'])
-    spinner.succeed(`🎉🎉🎉push to github successed!`)
+    spinner.succeed(`🎉🎉🎉Push to github succeeded!`)
   } catch (error) {
-    spinner.fail(`💥💥💥push to github failed, error:${error}`)
+    spinner.fail(`💥💥💥Push to github failed, error:${error}`)
     throw error
   }
+}
+
+const getReleaseTag = version => {
+  let releaseTag = null
+  if (args.tag) {
+    releaseTag = args.tag
+  } else if (version.includes('alpha')) {
+    releaseTag = 'alpha'
+  } else if (version.includes('beta')) {
+    releaseTag = 'beta'
+  } else if (version.includes('rc')) {
+    releaseTag = 'rc'
+  }
+  return releaseTag
 }
 
 const release = () =>
@@ -225,9 +285,10 @@ const release = () =>
     .then(runFormatAndEslint)
     .then(chooseVersion)
     .then(updateVersion)
-    .then(commitChanges)
     .then(buildPackage)
-    .then(publishPackage)
+    .then(generateChangeLog)
+    .then(commitChanges)
+    .then(publishPackages)
     .then(publishToGithub)
 
 release().catch(err => console.log('\n' + chalk.red(err)))

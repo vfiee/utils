@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV === 'production') {
-    module.exports = require('./dist/type.prod.cjs.js')
+  module.exports = require('./dist/type.prod.cjs.js')
 } else {
-    module.exports = require('./dist/type.cjs.js')
+  module.exports = require('./dist/type.cjs.js')
 }
