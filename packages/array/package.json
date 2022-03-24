@@ -1,14 +1,13 @@
 {
-  "name": "@v-utils/type",
+  "name": "@v-utils/array",
   "version": "0.0.1",
-  "description": "Common tools and methods for type determination",
+  "description": "Array common tools and methods",
   "main": "index.js",
-  "module": "dist/type.esm.js",
-  "types": "dist/type.d.ts",
+  "module": "dist/array.esm.js",
+  "types": "dist/array.d.ts",
   "keywords": [
     "utils",
-    "type",
-    "typeof"
+    "array"
   ],
   "files": [
     "index.js",
