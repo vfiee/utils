@@ -1,14 +1,13 @@
 /*
  * @Author: vyron
  * @Date: 2022-03-24 14:48:36
- * @LastEditTime: 2022-04-01 15:44:39
+ * @LastEditTime: 2022-04-02 14:35:46
  * @LastEditors: vyron
  * @Description: 数组常用方法
  * @FilePath: /v-utils/packages/array/src/index.ts
  */
 
-// 判断是否为数组
-export const isArray = Array.isArray
+import { isArray } from '@v-utils/type'
 
 // 将数组拆分成多个长度为 size 的块,并将多个块组成一个新数组并返回;
 // 如果 array 无法被分割成全部等长的块,剩余的元素将组成一个块
@@ -37,7 +36,7 @@ export const last = (array: any[]) =>
 // 根据 depth 递归减少 array 的嵌套层级
 export const flattenDepth = (array: any[], depth = 1): any[] => {
   if (!isArray(array) || depth < 1) return array
-  return array.reduce((acc, val) => {
+  return array.reduce((acc: any[], val: any) => {
     if (isArray(val)) {
       return acc.concat(flattenDepth(val, depth - 1))
     }
