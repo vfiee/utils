@@ -70,6 +70,14 @@ importers:
     dependencies:
       '@v-utils/type': link:../type
 
+  packages/v-utils:
+    specifiers:
+      '@v-utils/array': workspace:^0.0.1
+      '@v-utils/type': workspace:^0.0.1
+    dependencies:
+      '@v-utils/array': link:../array
+      '@v-utils/type': link:../type
+
 packages:
 
   /@babel/code-frame/7.16.7:
