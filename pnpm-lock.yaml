@@ -62,6 +62,12 @@ importers:
       yorkie: 2.0.0
       zlib: 1.0.5
 
+  packages/array:
+    specifiers:
+      '@v-utils/type': workspace:^0.0.1
+    dependencies:
+      '@v-utils/type': link:../type
+
 packages:
 
   /@babel/code-frame/7.16.7:
