@@ -23,7 +23,11 @@
             "node"
         ],
         "rootDir": ".",
-        "paths": {}
+        "paths": {
+            "@v-utils/*": [
+                "packages/*"
+            ]
+        }
     },
     "include": [
         "packages/*/src"
