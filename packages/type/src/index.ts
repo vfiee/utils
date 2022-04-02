@@ -1,7 +1,7 @@
 /*
  * @Author: vyron
  * @Date: 2022-01-10 17:38:09
- * @LastEditTime: 2022-04-01 14:44:04
+ * @LastEditTime: 2022-04-01 15:02:15
  * @LastEditors: vyron
  * @Description: 判断数据类型
  * @FilePath: /v-utils/packages/type/src/index.ts
@@ -83,6 +83,12 @@ export const isNaN = (value: unknown): boolean => value !== value
 // 是否为null或undefined
 export const isNil = (value: unknown): boolean =>
   value === null || value === undefined
+
+// 是否为假值
+export const isFalsy = (value: unknown): boolean => !!value === false
+
+// 是否为真值
+export const isTruthy = (value: unknown): boolean => !isFalsy(value)
 
 // 判断是否为有效的数组长度
 const MAX_SAFE_INTEGER = 9007199254740991
