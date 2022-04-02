@@ -1,13 +1,14 @@
 /*
  * @Author: vyron
  * @Date: 2022-02-14 14:25:44
- * @LastEditTime: 2022-02-27 22:52:44
+ * @LastEditTime: 2022-04-02 12:09:02
  * @LastEditors: vyron
  * @Description: build and output files
  * @FilePath: /v-utils/scripts/build.js
  */
 
 const fs = require('fs')
+const rm = require('rimraf')
 const path = require('path')
 const execa = require('execa')
 const chalk = require('chalk')
@@ -47,7 +48,8 @@ function checkAllSize(packages) {
 
 // rollup 打包
 async function build(package) {
-  await execa(
+  deleteTargetDist(package)
+  await await execa(
     'rollup',
     [
       '-c',
@@ -67,6 +69,18 @@ async function build(package) {
     { stdio: 'inherit' }
   )
   buildTypes && extractorTypes(package)
+}
+
+// 删除旧的产物
+function deleteTargetDist(packageName) {
+  const target = path.resolve(__dirname, `../packages/${packageName}/dist`)
+  rm(target, err => {
+    if (err) {
+      console.log(chalk.red(err))
+    } else {
+      console.log(chalk.green(`${target} deleted`))
+    }
+  })
 }
 
 // 生成 ts 类型文件

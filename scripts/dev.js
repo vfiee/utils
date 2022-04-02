@@ -1,7 +1,7 @@
 /*
  * @Author: vyron
  * @Date: 2022-02-27 17:12:24
- * @LastEditTime: 2022-03-24 15:16:28
+ * @LastEditTime: 2022-04-02 12:06:28
  * @LastEditors: vyron
  * @Description: watch file and output files for dev
  * @FilePath: /v-utils/scripts/dev.js
@@ -10,6 +10,7 @@ const fs = require('fs')
 const path = require('path')
 const chalk = require('chalk')
 const minimist = require('minimist')
+const rm = require('rimraf')
 const { build: esbuild } = require('esbuild')
 const nodePolyfills = require('@esbuild-plugins/node-modules-polyfill')
 
@@ -25,7 +26,17 @@ function run() {
     console.log(chalk.red(`No package found ===> ${packageName}`))
     process.exit(1)
   }
+  deleteTargetDist()
   build(packageName)
+}
+
+function deleteTargetDist() {
+  const target = path.resolve(__dirname, `../packages/${packageName}/dist`)
+  rm(target, err => {
+    if (err) {
+      console.log(chalk.red(err))
+    }
+  })
 }
 
 function transformFormat(format) {
