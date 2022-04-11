@@ -4,7 +4,7 @@
  * @LastEditTime: 2022-04-11 15:23:38
  * @LastEditors: vyron
  * @Description: 判断数据类型
- * @FilePath: /v-utils/packages/type/src/index.ts
+ * @FilePath: /j-utils/packages/type/src/index.ts
  */
 
 // return value like "[object String]"

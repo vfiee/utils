@@ -4,7 +4,7 @@
  * @LastEditTime: 2022-04-02 12:06:28
  * @LastEditors: vyron
  * @Description: watch file and output files for dev
- * @FilePath: /v-utils/scripts/dev.js
+ * @FilePath: /j-utils/scripts/dev.js
  */
 const fs = require('fs')
 const path = require('path')

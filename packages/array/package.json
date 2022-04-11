@@ -1,5 +1,5 @@
 {
-  "name": "@v-utils/array",
+  "name": "@j-utils/array",
   "version": "0.0.1",
   "description": "Array common tools and methods",
   "main": "index.js",
@@ -21,8 +21,5 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },
-  "dependencies": {
-    "@v-utils/type": "workspace:^0.0.1"
   }
 }

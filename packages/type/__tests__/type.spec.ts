@@ -21,7 +21,7 @@ import {
   isTruthy,
   isLength,
   isEmpty
-} from '@v-utils/type'
+} from '@j-utils/type'
 
 describe('type', () => {
   test('toTypeString', () => {

@@ -4,8 +4,8 @@
  * @LastEditTime: 2022-04-02 14:15:23
  * @LastEditors: vyron
  * @Description: 融合汇聚工具类导出
- * @FilePath: /v-utils/packages/v-utils/src/index.ts
+ * @FilePath: /j-utils/packages/j-utils/src/index.ts
  */
-export * from '@v-utils/array'
+export * from '@j-utils/array'
 
-export * from '@v-utils/type'
+export * from '@j-utils/type'

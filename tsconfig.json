@@ -23,7 +23,7 @@
         ],
         "rootDir": ".",
         "paths": {
-            "@v-utils/*": [
+            "@j-utils/*": [
                 "packages/*/src/index.ts"
             ]
         }

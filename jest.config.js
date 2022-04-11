@@ -11,11 +11,11 @@ module.exports = {
   coverageProvider: 'v8',
   coverageDirectory: 'coverage',
   coverageReporters: ['json', 'text', 'html'],
-  collectCoverageFrom: ['packages/**/**/*.ts', '!packages/v-utils/**'],
+  collectCoverageFrom: ['packages/**/**/*.ts', '!packages/j-utils/**'],
   moduleFileExtensions: ['js', 'ts'],
   moduleNameMapper: {
-    '@v-utils/type': '<rootDir>/packages/type/src',
-    '@v-utils/array': '<rootDir>/packages/array/src'
+    '@j-utils/type': '<rootDir>/packages/type/src',
+    '@j-utils/array': '<rootDir>/packages/array/src'
   },
   rootDir: __dirname,
   testMatch: ['<rootDir>/packages/**/__tests__/**/*spec.ts'],

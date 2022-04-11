@@ -1,13 +1,13 @@
 /*
  * @Author: vyron
  * @Date: 2022-03-24 14:48:36
- * @LastEditTime: 2022-04-11 15:47:50
+ * @LastEditTime: 2022-04-11 16:27:58
  * @LastEditors: vyron
  * @Description: 数组常用方法
- * @FilePath: /v-utils/packages/array/src/index.ts
+ * @FilePath: /j-utils/packages/array/src/index.ts
  */
 
-import { isArray } from '@v-utils/type'
+import { isArray } from '@j-utils/type'
 
 // 返回数组的第一个元素,如果没有则返回 undefined
 export const head = (array: any[]) => (isArray(array) ? array[0] : undefined)
@@ -25,7 +25,7 @@ export const compact = (array: any[]) => array.filter(Boolean)
 
 // 将数组拆分成多个长度为 size 的块,并将多个块组成一个新数组并返回;
 // 如果 array 无法被分割成全部等长的块,剩余的元素将组成一个块
-export const chunk = (array: any[], size: number = 1) => {
+export const chunk = (array: any[], size = 1) => {
   const result: any[] = []
   let index = 0
   while (index < array.length) {

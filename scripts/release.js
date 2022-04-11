@@ -9,6 +9,7 @@ const ora = require('ora')
 const execa = require('execa')
 const get = require('lodash.get')
 const set = require('lodash.set')
+const packageJson = require('package-json')
 const pkgDir = path.resolve(__dirname, '../packages')
 
 /**
@@ -79,12 +80,12 @@ const checkCurrentBranch = async () => {
 }
 
 // 2. 单元测试
-const runTest = () => run('pnpm', ['test'])
+const runTest = () => run('pnpm', ['run', 'test'])
 
 // 3. 运行 eslint & format 格式化代码
 const runFormatAndEslint = async () => {
-  await run('pnpm', ['lint'])
-  await run('pnpm', ['format'])
+  await run('pnpm', ['run', 'lint'])
+  await run('pnpm', ['run', 'format'])
 }
 
 // 4. 选择版本
@@ -140,7 +141,7 @@ const updatePackagesPkg = version => {
   const packages = fs.readdirSync(pkgDir)
   const updatedDependencies = dependencies => {
     Object.keys(dependencies).reduce((acc, dependency) => {
-      if (dependency.startsWith('@v-utils/')) {
+      if (dependency.startsWith('@j-utils/')) {
         acc[dependency] = version
       }
       return acc
@@ -151,31 +152,10 @@ const updatePackagesPkg = version => {
     const { dependencies } = require(pkgPath)
     const pkg = { version }
     if (dependencies) {
-      pkg[dependencies] = updatedDependencies(dependencies)
+      pkg['dependencies'] = updatedDependencies(dependencies)
     }
     updatePkg(pkg, pkgPath)
   })
-}
-
-// 8. 提交修改文件
-const commitChanges = async () => {
-  const spinner = progress(`Committing files`).start()
-  const { stdout } = await run('git', ['diff', '--ignore-submodules'], {
-    stdio: 'pipe'
-  })
-  const version = getPkg('version')
-  if (!stdout) {
-    spinner.succeed(`No changes to commit`)
-    return
-  }
-  try {
-    await run('git', ['add', '-A'])
-    await run('git', ['commit', '-m', `release: v${version}`])
-    spinner.succeed(`All changes have been committed`)
-  } catch (error) {
-    spinner.fail(`Failed to commit, error:${error}`)
-    throw error
-  }
 }
 
 // 6. 打包应用
@@ -202,6 +182,27 @@ const generateChangeLog = async () => {
   }
 }
 
+// 8. 提交修改文件
+const commitChanges = async () => {
+  const spinner = progress(`Committing files`).start()
+  const { stdout } = await run('git', ['diff', '--ignore-submodules'], {
+    stdio: 'pipe'
+  })
+  const version = getPkg('version')
+  if (!stdout) {
+    spinner.succeed(`No changes to commit`)
+    return
+  }
+  try {
+    await run('git', ['add', '-A'])
+    await run('git', ['commit', '-m', `release: v${version}`])
+    spinner.succeed(`All changes have been committed`)
+  } catch (error) {
+    spinner.fail(`Failed to commit, error:${error}`)
+    throw error
+  }
+}
+
 // 9.发布到npm
 const publishPackages = async () => {
   const packages = fs.readdirSync(pkgDir)
@@ -216,6 +217,15 @@ const publishPackage = async package => {
     null,
     path.resolve(pkgDir, `${package}/package.json`)
   )
+  const { version: npmVersion } =
+    (await packageJson(name).catch(() => ({}))) || {}
+  if (
+    semver.valid(npmVersion) &&
+    (semver.eq(version, npmVersion) || semver.lt(version, npmVersion))
+  ) {
+    return
+  }
+
   const releaseTag = getReleaseTag(version)
   const spinner = progress('Publishing to npm').start()
   try {
@@ -289,6 +299,6 @@ const release = () =>
     .then(generateChangeLog)
     .then(commitChanges)
     .then(publishPackages)
-    .then(publishToGithub)
+// .then(publishToGithub)
 
 release().catch(err => console.log('\n' + chalk.red(err)))

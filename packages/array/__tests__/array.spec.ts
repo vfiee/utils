@@ -6,7 +6,7 @@ import {
   flatten,
   flattenDepth,
   flattenDeep
-} from '@v-utils/array'
+} from '@j-utils/array'
 
 describe('array', () => {
   it('should return first element', () => {
