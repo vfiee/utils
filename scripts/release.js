@@ -219,13 +219,7 @@ const publishPackage = async package => {
   )
   const { version: npmVersion } =
     (await packageJson(name).catch(() => ({}))) || {}
-  if (
-    semver.valid(npmVersion) &&
-    (semver.eq(version, npmVersion) || semver.lt(version, npmVersion))
-  ) {
-    return
-  }
-
+  if (semver.valid(npmVersion) && semver.lte(version, npmVersion)) return
   const releaseTag = getReleaseTag(version)
   const spinner = progress('Publishing to npm').start()
   try {
