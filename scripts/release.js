@@ -299,6 +299,6 @@ const release = () =>
     .then(generateChangeLog)
     .then(commitChanges)
     .then(publishPackages)
-// .then(publishToGithub)
+    .then(publishToGithub)
 
 release().catch(err => console.log('\n' + chalk.red(err)))
