@@ -1,10 +1,10 @@
 {
-  "name": "v-utils",
+  "name": "@vyron/utils",
   "version": "0.0.1",
   "description": "javascript utils",
   "main": "index.js",
-  "module": "dist/v-utils.esm.js",
-  "types": "dist/v-utils.d.ts",
+  "module": "dist/utils.esm.js",
+  "types": "dist/utils.d.ts",
   "keywords": [
     "utils",
     "javascript",
@@ -22,9 +22,5 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
-  },
-  "dependencies": {
-    "@v-utils/array": "workspace:^0.0.1",
-    "@v-utils/type": "workspace:^0.0.1"
   }
 }

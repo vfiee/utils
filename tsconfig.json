@@ -14,22 +14,22 @@
         "resolveJsonModule": true,
         "esModuleInterop": true,
         "removeComments": false,
-        "jsx": "preserve",
         "lib": [
-            "esnext",
-            "dom"
+            "esnext"
         ],
         "types": [
+            "jest",
             "node"
         ],
         "rootDir": ".",
         "paths": {
-            "@v-utils/*": [
-                "packages/*"
+            "@j-utils/*": [
+                "packages/*/src/index.ts"
             ]
         }
     },
     "include": [
-        "packages/*/src"
+        "packages/*/src",
+        "packages/*/__tests__"
     ]
 }

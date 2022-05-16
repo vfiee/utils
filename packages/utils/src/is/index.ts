@@ -1,10 +1,10 @@
 /*
  * @Author: vyron
  * @Date: 2022-01-10 17:38:09
- * @LastEditTime: 2022-04-01 15:02:15
+ * @LastEditTime: 2022-04-11 15:23:38
  * @LastEditors: vyron
  * @Description: 判断数据类型
- * @FilePath: /v-utils/packages/type/src/index.ts
+ * @FilePath: /j-utils/packages/type/src/index.ts
  */
 
 // return value like "[object String]"
@@ -126,7 +126,7 @@ export const isEmpty = (value: unknown): boolean => {
     return !Object.keys(value as object).length
   }
   for (const key in value as object) {
-    if (!Object.prototype.hasOwnProperty.call(value, key)) {
+    if (Object.prototype.hasOwnProperty.call(value, key)) {
       return false
     }
   }
