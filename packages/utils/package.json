@@ -1,21 +1,22 @@
 {
   "name": "@vyron/utils",
   "version": "0.0.1",
-  "description": "javascript utils",
   "main": "index.js",
   "module": "dist/utils.esm.js",
   "types": "dist/utils.d.ts",
+  "globalPackageName": "utils",
+  "description": "JavaScript utils",
   "keywords": [
     "utils",
     "javascript",
     "typescript"
   ],
   "files": [
-    "index.js",
-    "LICENSE",
     "dist",
-    "package.json",
-    "README.md"
+    "LICENSE",
+    "index.js",
+    "README.md",
+    "package.json"
   ],
   "author": "vyron",
   "license": "MIT",

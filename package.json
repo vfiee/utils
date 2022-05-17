@@ -2,7 +2,6 @@
   "private": "true",
   "version": "0.0.1",
   "description": "Front-end tool library",
-  "main": "index.js",
   "scripts": {
     "dev": "node scripts/dev.js",
     "build": "cross-env NODE_ENV=production node scripts/build.js -ts",
@@ -28,9 +27,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VFiee/j-utils.git"
+    "url": "git+https://github.com/VFiee/utils.git"
   },
   "keywords": [
+    "js",
+    "ts",
     "utils",
     "front-end",
     "javaScript",
@@ -39,13 +40,13 @@
   "author": "vyron",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/VFiee/j-utils/issues"
+    "url": "https://github.com/VFiee/utils/issues"
   },
   "engines": {
     "node": ">=v14.17.6",
     "pnpm": ">=6.25.1"
   },
-  "homepage": "https://github.com/VFiee/j-utils#readme",
+  "homepage": "https://github.com/VFiee/utils#readme",
   "publishConfig": {
     "main": "index.js",
     "typings": "index.d.ts"
