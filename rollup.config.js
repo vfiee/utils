@@ -5,17 +5,23 @@ const target = process.env.TARGET
 const packagesDir = path.resolve(__dirname, 'packages')
 const packageDir = path.resolve(packagesDir, target)
 const resolve = p => path.resolve(packageDir, p)
-const isProd = process.env.NODE_ENV === 'production'
 
-const outputConfigs = ['es', 'cjs', 'iife'].reduce((config, format) => {
-  config[format] = {
+const isProd = process.env.NODE_ENV === 'production'
+const allFormats = ['es', 'cjs', 'iife', 'umd']
+const isGlobalPackage = pak => ['iife', 'umd'].includes(pak)
+const outputConfigs = allFormats.reduce((configs, format) => {
+  configs[format] = {
     format,
     file: resolve(`dist/${target}.${transformFormat(format)}.js`)
   }
-  return config
+  if (isGlobalPackage(format)) {
+    const name = require(resolve('package.json')).globalPackageName
+    configs[format].name = name || target
+  }
+  return configs
 }, {})
 
-const defaultFormats = ['es', 'cjs', 'iife']
+const defaultFormats = allFormats
 const envFormats = process.env.FORMATS && process.env.FORMATS.split('.')
 const packageFormats = envFormats || defaultFormats
 const packageConfigs = packageFormats.map(format =>
@@ -25,7 +31,7 @@ if (isProd) {
   packageFormats.forEach(format => {
     if (format === 'cjs') {
       packageConfigs.push(createProdConfig(format))
-    } else if (format === 'iife') {
+    } else if (isGlobalPackage(format)) {
       packageConfigs.push(createMinifiedConfig(format))
     }
   })
@@ -70,6 +76,7 @@ function transformFormat(format) {
   const formats = {
     es: 'esm',
     cjs: 'cjs',
+    umd: 'umd',
     iife: 'global'
   }
   return formats[format] || format
@@ -86,7 +93,7 @@ function createMinifiedConfig(format) {
   return createConfig(
     format,
     {
-      format: outputConfigs[format].format,
+      ...outputConfigs[format],
       file: outputConfigs[format].file.replace(/\.js$/, '.prod.js')
     },
     [
