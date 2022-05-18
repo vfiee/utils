@@ -11,7 +11,7 @@ Done ✅
 | job      | desc                                                                               | status | deadline   |
 | -------- | :--------------------------------------------------------------------------------- | ------ | ---------- |
 | docs     | supplement `readme,dev_spec`                                                       | ✅     | 2022-05-16 |
-| docs     | add jsdoc annotate for all method                                                  | ❎     | 2022-05-17 |
+| docs     | add jsdoc annotate for all method                                                  | ✅     | 2022-05-17 |
 | template | add project template                                                               | ❎     | 2022-05-18 |
 | utils    | add `isStream isURLSearchParams isFile isBlob isArrayBufferView isFormData` method | ❎     | 2022-05-19 |
 | vhooks   | init vhooks(vue-hooks) project                                                     | ❎     | 2022-05-20 |
