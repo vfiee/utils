@@ -1,106 +1,262 @@
 /*
  * @Author: vyron
  * @Date: 2022-01-10 17:38:09
- * @LastEditTime: 2022-04-11 15:23:38
+ * @LastEditTime: 2022-05-18 11:37:16
  * @LastEditors: vyron
  * @Description: 判断数据类型
- * @FilePath: /j-utils/packages/type/src/index.ts
+ * @FilePath: /utils/packages/utils/src/is/index.ts
  */
 
-// return value like "[object String]"
-export const toTypeString = (value: unknown): string =>
-  Object.prototype.toString.call(value)
+/**
+ * Returns a fixed format string that can be used to determine the data type
+ * @param {unknown} value The value that needs to be converted to a type string
+ * @returns {string} The type string, like "[object String]"
+ */
+export function toTypeString(value: unknown): string {
+  return Object.prototype.toString.call(value)
+}
 
-// return value like String | Boolean | Number | Array | Object | Function | RegExp | Date
-export const toRawType = (value: unknown): string =>
-  toTypeString(value).slice(8, -1)
+/**
+ * Returns a string representing type value
+ * @param {unknown} value The data which want to know the type
+ * @returns {string} The value type, like String | Boolean | Number | Array | Object | Function | RegExp | Date
+ */
+export function toRawType(value: unknown): string {
+  return toTypeString(value).slice(8, -1)
+}
 
-// 是否为String
-export const isString = (value: unknown): value is string =>
-  typeof value === 'string'
+/**
+ * Returns whether the value is an string
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a string, otherwise false
+ */
+export function isString(value: unknown): value is string {
+  return typeof value === 'string'
+}
 
-// 是否为Boolean
-export const isBoolean = (value: unknown): value is boolean =>
-  typeof value === 'boolean'
+/**
+ * Returns whether the value is an boolean
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a boolean, otherwise false
+ */
+export function isBoolean(value: unknown): value is boolean {
+  return typeof value === 'boolean'
+}
 
-// 是否为Number
-export const isNumber = (value: unknown): value is number =>
-  typeof value === 'number'
+/**
+ * Returns whether the value is an number
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a number, otherwise false
+ */
+export function isNumber(value: unknown): value is number {
+  return typeof value === 'number'
+}
 
-// 是否为Symbol
-export const isSymbol = (value: unknown): value is symbol =>
-  typeof value === 'symbol'
+/**
+ * Returns whether the value is an bigint
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a bigint, otherwise false
+ */
+export function isBigInt(value: unknown): value is bigint {
+  return typeof value === 'bigint'
+}
 
-// 是否为Null
-export const isNull = (value: unknown): value is null => value === null
+/**
+ * Returns whether the value is an symbol
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a symbol, otherwise false
+ */
+export function isSymbol(value: unknown): value is symbol {
+  return typeof value === 'symbol'
+}
 
-// 是否为Null
-export const isUndefined = (value: unknown): value is null =>
-  value === undefined
+/**
+ * Returns whether the value is an null
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a null, otherwise false
+ */
+export function isNull(value: unknown): value is null {
+  return value === null
+}
 
-// 是否为 Array
+/**
+ * Returns whether the value is an unknown
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a unknown, otherwise false
+ */
+export function isUndefined(value: unknown): value is null {
+  return value === undefined
+}
+
+/**
+ * Returns whether the value is an array
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a array, otherwise false
+ */
 export const isArray = Array.isArray
 
-// 是否为 Object
-export const isObject = (value: unknown): value is object =>
-  typeof value === 'object' && value !== null
+/**
+ * Returns whether the value is an object
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a object, otherwise false
+ * @example
+ * isObject({}) // return true
+ * isObject(new Date()) // return true
+ * isObject(/^hello\sworld!$/) // return true
+ *
+ */
+export function isObject(value: unknown): value is object {
+  return typeof value === 'object' && value !== null
+}
 
-// 是否为Function
-export const isFunction = (value: unknown): boolean =>
-  typeof value === 'function'
+/**
+ * Returns whether the value is an function
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a function, otherwise false
+ * @example
+ * isFunction(() => {}) // return true
+ * isFunction(new Function('return this')) // return true
+ * isFunction(async function(){}) // return true
+ *
+ */
+export function isFunction(value: unknown): boolean {
+  return typeof value === 'function'
+}
 
-// 是否为RegExp
-export const isRegExp = (value: unknown): value is RegExp =>
-  toRawType(value) === 'RegExp'
+/**
+ * Returns whether the value is an RegExp
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a RegExp, otherwise false
+ */
+export function isRegExp(value: unknown): value is RegExp {
+  return toRawType(value) === 'RegExp'
+}
 
-// 是否为Date
-export const isDate = (value: unknown): value is Date =>
-  toRawType(value) === 'Date'
+/**
+ * Returns whether the value is an Date
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a Date, otherwise false
+ */
+export function isDate(value: unknown): value is Date {
+  return toRawType(value) === 'Date'
+}
 
-// 是否为 Arguments
-export const isArguments = (value: unknown): boolean =>
-  toRawType(value) === 'Arguments'
+/**
+ * Returns whether the value is Arguments
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is Arguments, otherwise false
+ */
+export function isArguments(value: unknown): boolean {
+  return toRawType(value) === 'Arguments'
+}
 
-// 是否为 Map
-export const isMap = (value: unknown): value is Map<any, any> =>
-  toRawType(value) === 'Map'
+/**
+ * Returns whether the value is an Map
+ * @param {unknown} value Any legal JavaScript value
+ * @param {boolean} [allowWeakMap=false] Is weakMap to be map, default is false
+ * @returns {boolean} Returns true if value is a Map, otherwise false
+ */
+export function isMap(
+  value: unknown,
+  allowWeakMap: boolean = false
+): value is Map<any, any> {
+  const rawType = toRawType(value)
+  return allowWeakMap
+    ? rawType === 'WeakMap' || rawType === 'Map'
+    : rawType === 'Map'
+}
 
-// 是否为 WeakMap
-export const isWeakMap = (value: unknown): value is WeakMap<object, any> =>
-  toRawType(value) === 'WeakMap'
+/**
+ * Returns whether the value is an WeakMap
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a WeakMap, otherwise false
+ */
+export function isWeakMap(value: unknown): value is WeakMap<object, any> {
+  return toRawType(value) === 'WeakMap'
+}
 
-// 是否为 Set
-export const isSet = (value: unknown): value is Set<any> =>
-  toRawType(value) === 'Set'
+/**
+ * Returns whether the value is an Set
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a Set, otherwise false
+ */
+export function isSet(value: unknown): value is Set<any> {
+  return toRawType(value) === 'Set'
+}
 
-// 是否为 WeakSet
-export const isWeakSet = (value: unknown): value is WeakSet<object> =>
-  toRawType(value) === 'WeakSet'
+/**
+ * Returns whether the value is an WeakSet
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a WeakSet, otherwise false
+ */
+export function isWeakSet(value: unknown): value is WeakSet<object> {
+  return toRawType(value) === 'WeakSet'
+}
 
-// 是否为NaN
-export const isNaN = (value: unknown): boolean => value !== value
+/**
+ * Returns whether the value is NaN
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is NaN, otherwise false
+ */
+export function isNaN(value: unknown): boolean {
+  return value !== value
+}
 
-// 是否为null或undefined
-export const isNil = (value: unknown): boolean =>
-  value === null || value === undefined
+/**
+ * Returns whether the value is null or undefined
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is null or undefined, otherwise false
+ */
+export function isNil(value: unknown): boolean {
+  return value === null || value === undefined
+}
 
-// 是否为假值
-export const isFalsy = (value: unknown): boolean => !!value === false
+/**
+ * Returns whether the value is falsy
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is falsy, otherwise false
+ * @description In javascript, false, 0, -0, 0n, '', null, undefined, NaN are falsy
+ * @link https://developer.mozilla.org/en-US/docs/Glossary/Falsy
+ */
+export function isFalsy(value: unknown): boolean {
+  return !!value === false
+}
 
-// 是否为真值
-export const isTruthy = (value: unknown): boolean => !isFalsy(value)
+/**
+ * Returns whether the value is truthy
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is truthy, otherwise false
+ * @description In javascript, truthy value are not falsy
+ * @link https://developer.mozilla.org/en-US/docs/Glossary/Truthy
+ */
+export function isTruthy(value: unknown): boolean {
+  return !isFalsy(value)
+}
 
-// 判断是否为有效的数组长度
+/**
+ * Returns whether the value is valid array length
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is valid array length, otherwise false
+ */
 const MAX_SAFE_INTEGER = 9007199254740991
-export const isLength = (value: unknown): boolean =>
-  isNumber(value) && value >= 0 && value <= MAX_SAFE_INTEGER
+export function isLength(value: unknown): boolean {
+  return isNumber(value) && value >= 0 && value <= MAX_SAFE_INTEGER
+}
 
-// 判断是否为类数组
-export const isArrayLike = (value: unknown): boolean =>
-  value != null && !isFunction(value) && isLength((value as Array<any>).length)
+/**
+ * Returns whether the value is array like
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is array like, otherwise false
+ */
+export function isArrayLike(value: unknown): boolean {
+  return (
+    value != null &&
+    !isFunction(value) &&
+    isLength((value as Array<any>)?.length)
+  )
+}
 
-// 是否为原型
-export const isPrototype = (value: unknown): boolean => {
+function isPrototype(value: unknown): boolean {
   const Constructor = value && (value as any).constructor
   const proto =
     (typeof Constructor === 'function' && Constructor.prototype) ||
@@ -109,10 +265,24 @@ export const isPrototype = (value: unknown): boolean => {
 }
 
 /**
- * 判断 value 是否为空对象,数组,map 或 set
- * @param value
+ * Return whether the value is empty
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is empty, otherwise false
+ * @description
+ * If the value is falsy, return true
+ * If the value is an object, return true if the value is empty
+ * If the value is an array or array like or string, return true if the value length le 0
+ * If the value is a map or set, return true if the value size le(less or equal) 0
+ * Otherwise, return false
+ * @example
+ * isEmpty() // return true
+ * isEmpty({}) // return true
+ * isEmpty([]) // return true
+ * isEmpty(new Map()) // return true
+ * isEmpty(new Set()) // return true
+ * isEmpty(Object.prototype) // return false
  */
-export const isEmpty = (value: unknown): boolean => {
+export function isEmpty(value: unknown): boolean {
   if (value == null) return true
   const rawType = toRawType(value)
   if (rawType === 'Set' || rawType === 'Map') {

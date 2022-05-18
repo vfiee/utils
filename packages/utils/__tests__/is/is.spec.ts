@@ -3,6 +3,7 @@ import {
   toTypeString,
   isBoolean,
   isNumber,
+  isBigInt,
   isSymbol,
   isNull,
   isUndefined,
@@ -23,7 +24,7 @@ import {
   isEmpty
 } from '../../src'
 
-describe('type', () => {
+describe('is', () => {
   test('toTypeString', () => {
     expect(toTypeString(true)).toBe('[object Boolean]')
     expect(toTypeString(1)).toBe('[object Number]')
@@ -52,31 +53,39 @@ describe('type', () => {
   test('isString', () => {
     const str = 'string'
     const str2 = new String('string')
-    const num = 100
+    const str3 = `I'm a string`
     expect(isString(str)).toBe(true)
     expect(isString(str2)).toBe(false)
-    expect(isString(num)).toBe(false)
+    expect(isString(str3)).toBe(true)
   })
 
   test('isBoolean', () => {
     const bool = true
     const bool2 = new Boolean(true)
-    const num = 100
+    const bool3 = !bool
     expect(isBoolean(bool)).toBe(true)
     expect(isBoolean(bool2)).toBe(false)
-    expect(isBoolean(num)).toBe(false)
-    expect(isBoolean(!num)).toBe(true)
+    expect(isBoolean(bool3)).toBe(true)
   })
 
   test('isNumber', () => {
     const num = 100
     const nan = NaN
     const num2 = new Number(100)
-    const str = 'string'
+    const num3 = Infinity
+    const num4 = BigInt(9007199254740991)
     expect(isNumber(num)).toBe(true)
     expect(isNumber(nan)).toBe(true)
     expect(isNumber(num2)).toBe(false)
-    expect(isNumber(str)).toBe(false)
+    expect(isNumber(num3)).toBe(true)
+    expect(isNumber(num4)).toBe(false)
+  })
+
+  test('isBigInt', () => {
+    const num = 100n
+    const num1 = BigInt(9007199254740991)
+    expect(isBigInt(num)).toBe(true)
+    expect(isBigInt(num1)).toBe(true)
   })
 
   test('isSymbol', () => {
@@ -87,13 +96,11 @@ describe('type', () => {
   test('isNull', () => {
     expect(isNull(null)).toBe(true)
     expect(isNull(undefined)).toBe(false)
-    expect(isNull(0)).toBe(false)
   })
 
   test('isUndefined', () => {
     expect(isUndefined(undefined)).toBe(true)
     expect(isUndefined(null)).toBe(false)
-    expect(isUndefined(0)).toBe(false)
   })
   test('isObject', () => {
     expect(isObject(null)).toBe(false)
@@ -112,15 +119,23 @@ describe('type', () => {
 
   test('isFunction', () => {
     const fn = jest.fn()
+    const fn2 = () => {}
+    const fn3 = new Function('return this')
+    const fn4 = async function () {}
     expect(isFunction(fn)).toBe(true)
+    expect(isFunction(fn2)).toBe(true)
+    expect(isFunction(fn3)).toBe(true)
+    expect(isFunction(fn4)).toBe(true)
   })
 
   test('isRegExp', () => {
     expect(isRegExp(/foo/)).toBe(true)
+    expect(isRegExp(new RegExp('^hello\\sworld$'))).toBe(true)
   })
 
   test('isArray', () => {
     expect(isArray([])).toBe(true)
+    expect(isArray(new Array(2))).toBe(true)
     function fn() {
       expect(isArray(arguments)).toBe(false)
       expect(isArray([...arguments])).toBe(true)
@@ -129,9 +144,7 @@ describe('type', () => {
   })
 
   test('isArrayLike', () => {
-    const arrayLikeObj = {
-      length: 1
-    }
+    const arrayLikeObj = { length: 1 }
     expect(isArrayLike([])).toBe(true)
     expect(isArrayLike(arrayLikeObj)).toBe(true)
     function fn() {
@@ -142,21 +155,27 @@ describe('type', () => {
 
   test('isDate', () => {
     expect(isDate(new Date())).toBe(true)
+    expect(isDate(Date())).toBe(false)
   })
   test('isMap', () => {
     expect(isMap(new Map())).toBe(true)
+    expect(isMap(new WeakMap())).toBe(false)
+    expect(isMap(new WeakMap(), true)).toBe(true)
   })
 
   test('isWeakMap', () => {
     expect(isWeakMap(new WeakMap())).toBe(true)
+    expect(isWeakMap(new Map())).toBe(false)
   })
 
   test('isSet', () => {
     expect(isSet(new Set())).toBe(true)
+    expect(isSet(new WeakSet())).toBe(false)
   })
 
   test('isWeakSet', () => {
     expect(isWeakSet(new WeakSet())).toBe(true)
+    expect(isWeakSet(new Set())).toBe(false)
   })
 
   test('isNaN', () => {
@@ -172,11 +191,13 @@ describe('type', () => {
   })
 
   test('isFalsy', () => {
+    expect(isFalsy(false)).toBe(true)
+    expect(isFalsy(0)).toBe(true)
+    expect(isFalsy(-0)).toBe(true)
+    expect(isFalsy(0n)).toBe(true)
+    expect(isFalsy('')).toBe(true)
     expect(isFalsy(null)).toBe(true)
     expect(isFalsy(undefined)).toBe(true)
-    expect(isFalsy(0)).toBe(true)
-    expect(isFalsy('')).toBe(true)
-    expect(isFalsy(false)).toBe(true)
     expect(isFalsy(NaN)).toBe(true)
   })
 
@@ -229,5 +250,7 @@ describe('type', () => {
     expect(isEmpty(obj)).toBe(false)
     expect(isEmpty(map)).toBe(false)
     expect(isEmpty(set)).toBe(false)
+    // There are no attributes to enumerate
+    expect(isEmpty(Object.prototype)).toBe(true)
   })
 })

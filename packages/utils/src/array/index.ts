@@ -1,31 +1,57 @@
 /*
  * @Author: vyron
  * @Date: 2022-03-24 14:48:36
- * @LastEditTime: 2022-05-16 14:52:45
+ * @LastEditTime: 2022-05-18 18:46:04
  * @LastEditors: vyron
  * @Description: 数组常用方法
  * @FilePath: /utils/packages/utils/src/array/index.ts
  */
 import { isArray } from '../is'
 
-// 返回数组的第一个元素,如果没有则返回 undefined
-export const head = (array: any[]) => (isArray(array) ? array[0] : undefined)
+/**
+ * Get the first element of an array.
+ * @param {any[]} array
+ * @returns {any} Returns the first element of `array`.
+ */
+export function head<T = any>(array: T[]): T {
+  return array?.[0]
+}
 
 export const first = head
 
-// 返回数组的最后一个元素,如果没有则返回 undefined
-export const last = (array: any[]) =>
-  isArray(array) ? array[array.length - 1] : undefined
+/**
+ * Get the last element of an array.
+ * @param {any[]} array
+ * @returns {any} Returns the last element of `array`.
+ */
+export function last<T = any>(array: T[]): T {
+  return array?.[array.length - 1]
+}
 
 export const tail = last
 
-// 过滤并返回数组中所有的 truthy 值元素
-export const compact = (array: any[]) => array.filter(Boolean)
+/**
+ * Filter out all falsy values in the array
+ * @param {any[]} array The array to filter
+ * @returns {any[]} Returns the new array without falsy values
+ */
+export function compact<T = any>(array: T[]): T[] {
+  return array.filter(Boolean)
+}
 
-// 将数组拆分成多个长度为 size 的块,并将多个块组成一个新数组并返回;
-// 如果 array 无法被分割成全部等长的块,剩余的元素将组成一个块
-export const chunk = (array: any[], size = 1) => {
-  const result: any[] = []
+/**
+ * Splits the array into the specified size and returns the new array.
+ * If the array is not long enough to be divided into size blocks,
+ * the rest is treated as a separate block
+ * @param {any[]} array The array to chunk
+ * @param {number} [size=1] The chunk size
+ * @returns {any[][]} Returns the new array chunked
+ * @example
+ * chunk([1, 2, 3, 4, 5, 6, 7, 8], 3) // [[1, 2, 3], [4, 5, 6], [7, 8]]
+ * chunk([1, 2, 3, 4, 5, 6, 7, 8], 4) // [[1, 2, 3, 4], [5, 6, 7, 8]]
+ */
+export function chunk<T = any>(array: T[], size: number = 1): T[][] {
+  const result: T[][] = []
   let index = 0
   while (index < array.length) {
     result.push(array.slice(index, index + size))
@@ -34,19 +60,75 @@ export const chunk = (array: any[], size = 1) => {
   return result
 }
 
-// 根据 depth 递归减少 array 的嵌套层级
-export const flattenDepth = (array: any[], depth = 1): any[] => {
-  if (!isArray(array) || depth < 1) return array
-  return array.reduce((acc: any[], val: any) => {
-    if (isArray(val)) {
-      return acc.concat(flattenDepth(val, depth - 1))
-    }
-    return acc.concat(val)
+type FlatArray<Arr, Depth extends number> = {
+  done: Arr
+  recur: Arr extends ReadonlyArray<infer InnerArr>
+    ? FlatArray<
+        InnerArr,
+        [
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ][Depth]
+      >
+    : Arr
+}[Depth extends -1 ? 'done' : 'recur']
+
+/**
+ * Flattens the array to the specified depth, return the flattened array
+ * @param {any[]} array The array to flatten
+ * @param {number} [depth=1] The depth of flattening
+ * @returns {any[]} Returns the new array flattened
+ * @example
+ * flattenDepth([1, [2, [3, [4, [5]]]]]) // [1, 2, [3, [4, [5]]]]
+ */
+export function flattenDepth<A, D extends number = 1>(
+  array: A,
+  depth: number = 1
+): FlatArray<A, D>[] {
+  if (!isArray(array) || depth < 1) return array as unknown as FlatArray<A, D>[]
+  return array.reduce((acc: FlatArray<A, D>[], val: any) => {
+    return acc.concat(isArray(val) ? flattenDepth(val, depth - 1) : val)
   }, [])
 }
 
-// 将数组递归为一维数组
-export const flattenDeep = (array: any[]) => flattenDepth(array, array.length)
+/**
+ * Flattens the array depth, return the new one-dimensional array
+ * @param {any[]} array The array to flatten
+ * @returns {any[]} Returns the new array flattened
+ * @example
+ * flattenDeep([1, [2, [3, [4, [5]]]]]) // [1, 2, 3, 4, 5]
+ */
+export function flattenDeep<A>(array: A): FlatArray<A, number>[] {
+  return flattenDepth<A, number>(array, (array as unknown as Array<any>).length)
+}
 
-// 减少一级数组的嵌套
-export const flatten = (array: any[]) => flattenDepth(array)
+/**
+ * Returns a new array with 1 depth flattened
+ * @param {any[]} array The array to flatten
+ * @returns {any[]} Returns the new array flattened
+ * @example
+ * flatten([1, [2, [3, [4, [5]]]]]) // [1, 2, [3, [4, [5]]]]
+ */
+export function flatten<A>(array: A): FlatArray<A, number>[] {
+  return flattenDepth<A>(array)
+}
