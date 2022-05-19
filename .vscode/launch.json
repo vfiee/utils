@@ -5,6 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Plop",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "plop",
+            ],
+            "runtimeExecutable": "npm",
+            "console": "integratedTerminal",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
             "name": "Jest",
             "request": "launch",
             "runtimeArgs": [

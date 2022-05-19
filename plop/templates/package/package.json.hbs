@@ -1,0 +1,27 @@
+{
+  "name": "@vyron/{{kebabCase packageName}}",
+  "version": "{{version}}",
+  "main": "index.js",
+  "module": "dist/{{kebabCase packageName}}.esm.js",
+  "types": "dist/{{kebabCase packageName}}.d.ts",
+  "globalPackageName": "{{camelCase packageName}}",
+  "description": "JavaScript utils",
+  "keywords": [
+    "{{kebabCase packageName}}",
+    "javascript",
+    "typescript"
+  ],
+  "files": [
+    "dist",
+    "LICENSE",
+    "index.js",
+    "README.md",
+    "package.json"
+  ],
+  "author": "vyron",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

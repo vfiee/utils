@@ -9,6 +9,7 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "preinstall": "npx only-allow pnpm",
     "test": "jest --no-cache",
+    "plop": "plop --plopfile plop/config.mjs",
     "lint": "eslint --ext .ts packages/*/src/**.ts",
     "format": "prettier --write --parser typescript \"packages/**/*.ts?(x)\""
   },
@@ -74,6 +75,7 @@
     "minimist": "^1.2.6",
     "ora": "5.4.1",
     "package-json": "^7.0.0",
+    "plop": "^3.1.0",
     "prettier": "^2.6.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.70.1",
@@ -81,6 +83,7 @@
     "rollup-plugin-typescript2": "^0.31.2",
     "semver": "^7.3.5",
     "ts-jest": "^27.1.4",
+    "ts-node": "^10.7.0",
     "ts-toolbelt": "^9.6.0",
     "typescript": "^4.6.3",
     "yorkie": "^2.0.0",
