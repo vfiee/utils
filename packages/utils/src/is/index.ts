@@ -1,7 +1,7 @@
 /*
  * @Author: vyron
  * @Date: 2022-01-10 17:38:09
- * @LastEditTime: 2022-05-18 11:37:16
+ * @LastEditTime: 2022-05-20 14:05:54
  * @LastEditors: vyron
  * @Description: 判断数据类型
  * @FilePath: /utils/packages/utils/src/is/index.ts
@@ -80,9 +80,9 @@ export function isNull(value: unknown): value is null {
 }
 
 /**
- * Returns whether the value is an unknown
+ * Returns whether the value is an undefined
  * @param {unknown} value Any legal JavaScript value
- * @returns {boolean} Returns true if value is a unknown, otherwise false
+ * @returns {boolean} Returns true if value is a undefined, otherwise false
  */
 export function isUndefined(value: unknown): value is null {
   return value === undefined
@@ -280,7 +280,7 @@ function isPrototype(value: unknown): boolean {
  * isEmpty([]) // return true
  * isEmpty(new Map()) // return true
  * isEmpty(new Set()) // return true
- * isEmpty(Object.prototype) // return false
+ * isEmpty(Object.prototype) // return true
  */
 export function isEmpty(value: unknown): boolean {
   if (value == null) return true
@@ -301,4 +301,66 @@ export function isEmpty(value: unknown): boolean {
     }
   }
   return true
+}
+
+/**
+ * Returns whether the value is an instance of URLSearchParams
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if the value is an instance of URLSearchParams, otherwise false
+ */
+export function isUrlSearchParams(value: unknown): value is URLSearchParams {
+  return (
+    !!value &&
+    typeof URLSearchParams === 'function' &&
+    value instanceof URLSearchParams
+  )
+}
+
+/**
+ * Returns whether the value is an instance of FormData
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if the value is an instance of FormData, otherwise false
+ */
+export function isFormData(value: unknown): value is FormData {
+  return !!value && typeof FormData === 'function' && value instanceof FormData
+}
+
+/**
+ * Returns whether the value is a File
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a File, otherwise false
+ */
+export function isFile(value: unknown): value is File {
+  return toRawType(value) === 'File'
+}
+
+/**
+ * Returns whether the value is a Blob
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is a Blob, otherwise false
+ */
+export function isBlob(value: unknown): value is Blob {
+  return toRawType(value) === 'Blob'
+}
+
+/**
+ * Returns whether the value is Stream
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is Stream, otherwise false
+ */
+export function isStream(value: unknown): boolean {
+  return isObject(value) && isFunction((value as any)?.pipe)
+}
+
+/**
+ * Returns whether the value is ArrayBufferView
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is ArrayBufferView, otherwise false
+ */
+export function isArrayBufferView(value: unknown): value is ArrayBufferView {
+  if (!value) return false
+  if (isFunction(ArrayBuffer) && ArrayBuffer.isView)
+    return ArrayBuffer.isView(value)
+  const buffer = (value as any)?.buffer
+  return buffer && buffer instanceof ArrayBuffer
 }

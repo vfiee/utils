@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 import {
   isString,
   toTypeString,
@@ -21,7 +22,15 @@ import {
   isFalsy,
   isTruthy,
   isLength,
-  isEmpty
+  isEmpty,
+  isNaN,
+  isArguments,
+  isArrayBufferView,
+  isBlob,
+  isFile,
+  isFormData,
+  isStream,
+  isUrlSearchParams
 } from '../../src'
 
 describe('is', () => {
@@ -252,5 +261,52 @@ describe('is', () => {
     expect(isEmpty(set)).toBe(false)
     // There are no attributes to enumerate
     expect(isEmpty(Object.prototype)).toBe(true)
+  })
+  test('isArguments', () => {
+    function fn() {
+      return arguments
+    }
+    expect(isArguments(fn())).toBe(true)
+    expect(isArguments([...fn()])).toBe(false)
+  })
+  test('isFormData', () => {
+    const formData = new FormData()
+    expect(isFormData({})).toBe(false)
+    expect(isFormData(formData)).toBe(true)
+  })
+  test('isUrlSearchParams', () => {
+    const urlParams = new URLSearchParams('id=50011030&type=2')
+    expect(isUrlSearchParams({})).toBe(false)
+    expect(isUrlSearchParams(urlParams)).toBe(true)
+  })
+  test('isBlob', () => {
+    const blob = new Blob(
+      [JSON.stringify({ label: 'Hello world!' }, null, 2)],
+      {
+        type: 'application/json'
+      }
+    )
+    expect(isBlob(blob)).toBe(true)
+  })
+  test('isFile', () => {
+    const file = new File(
+      [fs.readFileSync('../../package.json').toString()],
+      'package.json',
+      { type: 'application/json' }
+    )
+    expect(isFile(file)).toBe(true)
+  })
+  test('isArrayBufferView', () => {
+    const bufferView = new Int32Array()
+    const buffer = new ArrayBuffer(10)
+    const dataView = new DataView(buffer)
+    expect(isArrayBufferView(bufferView)).toBe(true)
+    expect(isArrayBufferView(dataView)).toBe(true)
+  })
+  test('isStream', () => {
+    const readStream = fs.createReadStream('../../package.json')
+    const writeStream = fs.createWriteStream('../../package.json')
+    expect(isStream(readStream)).toBe(true)
+    expect(isStream(writeStream)).toBe(true)
   })
 })

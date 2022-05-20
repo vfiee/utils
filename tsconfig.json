@@ -15,7 +15,8 @@
         "esModuleInterop": true,
         "removeComments": false,
         "lib": [
-            "esnext"
+            "esnext",
+            "DOM"
         ],
         "types": [
             "jest",
