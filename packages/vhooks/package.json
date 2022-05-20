@@ -1,0 +1,27 @@
+{
+  "name": "@vyron/vhooks",
+  "version": "0.0.1",
+  "main": "index.js",
+  "module": "dist/vhooks.esm.js",
+  "types": "dist/vhooks.d.ts",
+  "globalPackageName": "vhooks",
+  "description": "vue composition api hooks",
+  "keywords": [
+    "vhooks",
+    "javascript",
+    "typescript"
+  ],
+  "files": [
+    "dist",
+    "LICENSE",
+    "index.js",
+    "README.md",
+    "package.json"
+  ],
+  "author": "vyron",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}
