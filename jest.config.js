@@ -14,7 +14,7 @@ module.exports = {
   collectCoverageFrom: ['packages/**/**/*.ts'],
   moduleFileExtensions: ['js', 'ts'],
   moduleNameMapper: {
-    '@vyron/utils': '<rootDir>/packages/utils/src',
+    '@vyron/utils': '<rootDir>/packages/utils/src'
   },
   rootDir: __dirname,
   testMatch: ['<rootDir>/packages/**/__tests__/**/*spec.ts'],

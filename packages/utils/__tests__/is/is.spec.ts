@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import path from 'node:path'
 import {
   isString,
   toTypeString,
@@ -30,7 +31,8 @@ import {
   isFile,
   isFormData,
   isStream,
-  isUrlSearchParams
+  isUrlSearchParams,
+  isPrimitive
 } from '../../src'
 
 describe('is', () => {
@@ -235,6 +237,25 @@ describe('is', () => {
     expect(isLength(NaN)).toBe(false)
   })
 
+  test('isPrimitive', () => {
+    expect(isPrimitive(1)).toBe(true)
+    expect(isPrimitive('')).toBe(true)
+    expect(isPrimitive(false)).toBe(true)
+    expect(isPrimitive(null)).toBe(true)
+    expect(isPrimitive(undefined)).toBe(true)
+    expect(isPrimitive(NaN)).toBe(true)
+    expect(isPrimitive(Symbol('foo'))).toBe(true)
+    expect(isPrimitive(() => {})).toBe(false)
+    expect(isPrimitive(new Date())).toBe(false)
+    expect(isPrimitive(new Map())).toBe(false)
+    expect(isPrimitive(new Set())).toBe(false)
+    expect(isPrimitive(new WeakMap())).toBe(false)
+    expect(isPrimitive(new WeakSet())).toBe(false)
+    expect(isPrimitive(new Error())).toBe(false)
+    expect(isPrimitive(new Promise(() => {}))).toBe(false)
+    expect(isPrimitive(new Proxy({}, {}))).toBe(false)
+  })
+
   test('isEmpty', () => {
     expect(isEmpty(null)).toBe(true)
     expect(isEmpty(undefined)).toBe(true)
@@ -289,10 +310,13 @@ describe('is', () => {
     expect(isBlob(blob)).toBe(true)
   })
   test('isFile', () => {
+    const filePath = path.join(__dirname, '../../package.json')
     const file = new File(
-      [fs.readFileSync('../../package.json').toString()],
+      [fs.readFileSync(filePath).toString()],
       'package.json',
-      { type: 'application/json' }
+      {
+        type: 'application/json'
+      }
     )
     expect(isFile(file)).toBe(true)
   })

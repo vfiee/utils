@@ -1,7 +1,7 @@
 /*
  * @Author: vyron
  * @Date: 2022-01-10 17:38:09
- * @LastEditTime: 2022-05-20 14:05:54
+ * @LastEditTime: 2022-05-24 14:22:53
  * @LastEditors: vyron
  * @Description: 判断数据类型
  * @FilePath: /utils/packages/utils/src/is/index.ts
@@ -241,6 +241,20 @@ export function isTruthy(value: unknown): boolean {
 const MAX_SAFE_INTEGER = 9007199254740991
 export function isLength(value: unknown): boolean {
   return isNumber(value) && value >= 0 && value <= MAX_SAFE_INTEGER
+}
+
+/**
+ * Returns whether the value is JavaScript primitive value
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is JavaScript primitive value, otherwise false
+ * @description JavaScript primitive value is number, string, boolean, symbol, undefined, and bigint.
+ * typeof null === "object", but we consider it as primitive value because it is not a truthy object
+ */
+export function isPrimitive(value: unknown): boolean {
+  return (
+    isNil(value) ||
+    ['string', 'number', 'boolean', 'symbol', 'bigint'].includes(typeof value)
+  )
 }
 
 /**

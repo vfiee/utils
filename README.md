@@ -45,9 +45,10 @@ With CDN
 
 ## All Packages
 
-| package      | desc             |
-| ------------ | ---------------- |
-| @vyron/utils | JavaScript utils |
+| package       | desc                      |
+| ------------- | ------------------------- |
+| @vyron/utils  | JavaScript utils          |
+| @vyron/vhooks | Vue composition api hooks |
 
 ## License
 
