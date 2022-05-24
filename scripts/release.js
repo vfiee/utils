@@ -141,7 +141,7 @@ const updatePackagesPkg = version => {
   const packages = fs.readdirSync(pkgDir)
   const updatedDependencies = dependencies => {
     return Object.keys(dependencies).reduce((acc, dependency) => {
-      if (dependency.startsWith('@j-utils/')) {
+      if (dependency.startsWith('@vyron/')) {
         acc[dependency] = version
       }
       return acc
@@ -213,10 +213,11 @@ const publishPackages = async () => {
 
 // 6. 发布到 npm
 const publishPackage = async package => {
-  const { name, version } = getPkg(
+  const { name, version, skipRelease } = getPkg(
     null,
     path.resolve(pkgDir, `${package}/package.json`)
   )
+  if (skipRelease) return
   const { version: npmVersion } =
     (await packageJson(name).catch(() => ({}))) || {}
   if (semver.valid(npmVersion) && semver.lte(version, npmVersion)) return

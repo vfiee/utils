@@ -1,10 +1,10 @@
 /*
  * @Author: vyron
  * @Date: 2022-02-14 14:25:44
- * @LastEditTime: 2022-04-11 18:18:52
+ * @LastEditTime: 2022-05-24 17:39:03
  * @LastEditors: vyron
  * @Description: build and output files
- * @FilePath: /v-utils/scripts/build.js
+ * @FilePath: /utils/scripts/build.js
  */
 
 const fs = require('fs')
@@ -28,10 +28,12 @@ const packages = fs.readdirSync(packagesDir)
 const commit = execa.sync('git', ['rev-parse', 'HEAD']).stdout.slice(0, 7)
 
 async function run() {
-  const targetPackages = package && package.split(',')
-  const buildPackages = targetPackages
-    ? packages.filter(package => targetPackages.includes(package))
-    : packages
+  const targetPackages = (package && package.split(',')) || packages
+  const buildPackages = packages.filter(package => {
+    const { skipRelease } =
+      require(path.join(packagesDir, `${package}/package.json`)) || {}
+    return !skipRelease && targetPackages.includes(package)
+  })
   await buildAll(buildPackages)
   isProd && checkAllSize(buildPackages)
 }
