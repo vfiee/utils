@@ -1,7 +1,7 @@
 {
   "name": "@vyron/vhooks",
   "skipRelease": true,
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "index.js",
   "module": "dist/vhooks.esm.js",
   "types": "dist/vhooks.d.ts",
