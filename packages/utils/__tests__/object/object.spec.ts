@@ -1,6 +1,14 @@
-import { get, isEmpty, set, unset } from '../../src'
+import {
+  get,
+  isEmpty,
+  set,
+  unset,
+  getGlobalThis,
+  isObject,
+  isFunction
+} from '../../src'
 
-describe('utils/common', () => {
+describe('object', () => {
   test('get object', () => {
     const obj: object = { a: 1, b: [1, 2, 3], c: { a: 1, b: 2, c: 3 } }
     expect(get(obj, 'a')).toBe(1)
@@ -61,5 +69,11 @@ describe('utils/common', () => {
     expect(unset(arr, '0')).toBe(true)
     expect(isEmpty(arr)).toBe(false)
     expect(arr[0]).toBeUndefined()
+  })
+  test('should return global context', () => {
+    const global = getGlobalThis()
+    expect(isObject(global)).toBe(true)
+    expect(isFunction(global.setTimeout)).toBe(true)
+    expect(isFunction(global.Object)).toBe(true)
   })
 })

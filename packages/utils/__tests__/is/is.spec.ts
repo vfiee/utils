@@ -32,7 +32,8 @@ import {
   isFormData,
   isStream,
   isUrlSearchParams,
-  isPrimitive
+  isPrimitive,
+  isArrayBuffer
 } from '../../src'
 
 describe('is', () => {
@@ -328,9 +329,18 @@ describe('is', () => {
     expect(isArrayBufferView(dataView)).toBe(true)
   })
   test('isStream', () => {
-    const readStream = fs.createReadStream('../../package.json')
-    const writeStream = fs.createWriteStream('../../package.json')
+    const filePath = path.join(__dirname, 'stream.json')
+    const readStream = fs.createReadStream(filePath)
+    const writeStream = fs.createWriteStream(filePath)
+    writeStream.write(JSON.stringify({ json: true }, null, 2))
     expect(isStream(readStream)).toBe(true)
     expect(isStream(writeStream)).toBe(true)
+  })
+
+  test('isArrayBuffer', () => {
+    const buffer = new ArrayBuffer(10)
+    const array = new Array(10)
+    expect(isArrayBuffer(buffer)).toBe(true)
+    expect(isArrayBuffer(array)).toBe(false)
   })
 })
