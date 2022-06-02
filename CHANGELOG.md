@@ -1,3 +1,12 @@
+## [0.1.1](https://github.com/VFiee/utils/compare/v0.1.0...v0.1.1) (2022-06-02)
+
+
+### Features
+
+* **utils:** 新增 utils 方法 ([611f73a](https://github.com/VFiee/utils/commit/611f73a8054e7e612244e44c671b9205dcaa1b21))
+
+
+
 # 0.1.0 (2022-05-26)
 
 
