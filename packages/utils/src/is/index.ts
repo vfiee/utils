@@ -1,7 +1,7 @@
 /*
  * @Author: vyron
  * @Date: 2022-01-10 17:38:09
- * @LastEditTime: 2022-05-24 14:22:53
+ * @LastEditTime: 2022-06-02 14:30:44
  * @LastEditors: vyron
  * @Description: 判断数据类型
  * @FilePath: /utils/packages/utils/src/is/index.ts
@@ -377,4 +377,13 @@ export function isArrayBufferView(value: unknown): value is ArrayBufferView {
     return ArrayBuffer.isView(value)
   const buffer = (value as any)?.buffer
   return buffer && buffer instanceof ArrayBuffer
+}
+
+/**
+ * Returns whether the value is isArrayBuffer
+ * @param {unknown} value Any legal JavaScript value
+ * @returns {boolean} Returns true if value is isArrayBuffer, otherwise false
+ */
+export function isArrayBuffer(value: unknown): value is ArrayBuffer {
+  return toRawType(value) === 'ArrayBuffer'
 }

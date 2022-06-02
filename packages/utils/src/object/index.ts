@@ -1,12 +1,13 @@
 /*
  * @Author: vyron
  * @Date: 2022-05-20 14:56:24
- * @LastEditTime: 2022-05-24 14:16:44
+ * @LastEditTime: 2022-06-02 14:31:57
  * @LastEditors: vyron
  * @Description: common utils
  * @FilePath: /utils/packages/utils/src/object/index.ts
  */
 import { isArray, isLength, isNil, isNumber, isObject, isSymbol } from '../is'
+export { getGlobalThis } from './global'
 
 type PropertyName = string | number | symbol
 type ObjectTarget = {

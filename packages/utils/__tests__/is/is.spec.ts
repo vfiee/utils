@@ -32,7 +32,8 @@ import {
   isFormData,
   isStream,
   isUrlSearchParams,
-  isPrimitive
+  isPrimitive,
+  isArrayBuffer
 } from '../../src'
 
 describe('is', () => {
@@ -310,7 +311,7 @@ describe('is', () => {
     expect(isBlob(blob)).toBe(true)
   })
   test('isFile', () => {
-    const filePath = path.join(__dirname, '../../package.json')
+    const filePath = path.join(__dirname, 'is.spec.ts')
     const file = new File(
       [fs.readFileSync(filePath).toString()],
       'package.json',
@@ -332,5 +333,12 @@ describe('is', () => {
     const writeStream = fs.createWriteStream('../../package.json')
     expect(isStream(readStream)).toBe(true)
     expect(isStream(writeStream)).toBe(true)
+  })
+
+  test('isArrayBuffer', () => {
+    const buffer = new ArrayBuffer(10)
+    const array = new Array(10)
+    expect(isArrayBuffer(buffer)).toBe(true)
+    expect(isArrayBuffer(array)).toBe(false)
   })
 })
