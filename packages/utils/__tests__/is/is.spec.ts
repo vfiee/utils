@@ -311,7 +311,7 @@ describe('is', () => {
     expect(isBlob(blob)).toBe(true)
   })
   test('isFile', () => {
-    const filePath = path.join(__dirname, 'is.spec.ts')
+    const filePath = path.join(__dirname, '../../package.json')
     const file = new File(
       [fs.readFileSync(filePath).toString()],
       'package.json',
@@ -329,8 +329,9 @@ describe('is', () => {
     expect(isArrayBufferView(dataView)).toBe(true)
   })
   test('isStream', () => {
-    const readStream = fs.createReadStream('../../package.json')
-    const writeStream = fs.createWriteStream('../../package.json')
+    const filePath = path.join(__dirname, '../../package.json')
+    const readStream = fs.createReadStream(filePath)
+    const writeStream = fs.createWriteStream(filePath)
     expect(isStream(readStream)).toBe(true)
     expect(isStream(writeStream)).toBe(true)
   })
