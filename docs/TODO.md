@@ -4,7 +4,7 @@
 
 Not_started ❎  
 Wip ⛽️  
-Done ✅ 
+Done ✅
 
 ## Todo List
 
@@ -16,3 +16,6 @@ Done ✅
 | utils    | add `isStream isURLSearchParams isFile isBlob isArrayBufferView isFormData` method | ✅     | 2022-05-19 |
 | vhooks   | init vhooks(vue-hooks) project                                                     | ✅     | 2022-05-20 |
 | utils    | add `get set` method                                                               | ✅     | 2022-05-21 |
+| storage  | init storage package                                                               | ✅     | 2022-06-25 |
+| storage  | list storage feature                                                               | ❎     | 2022-06-26 |
+|          |                                                                                    |        |            |

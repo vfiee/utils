@@ -1,0 +1,27 @@
+{
+  "name": "@vyron/storage",
+  "version": "0.1.0",
+  "main": "index.js",
+  "module": "dist/storage.esm.js",
+  "types": "dist/storage.d.ts",
+  "globalPackageName": "storage",
+  "description": "javaScript storage  utils",
+  "keywords": [
+    "storage",
+    "javascript",
+    "typescript"
+  ],
+  "files": [
+    "dist",
+    "LICENSE",
+    "index.js",
+    "README.md",
+    "package.json"
+  ],
+  "author": "vyron",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

@@ -45,10 +45,11 @@ With CDN
 
 ## All Packages
 
-| package       | desc                      |
-| ------------- | ------------------------- |
-| @vyron/utils  | JavaScript utils          |
-| @vyron/vhooks | Vue composition api hooks |
+| package        | desc                      |
+| -------------- | ------------------------- |
+| @vyron/utils   | JavaScript utils          |
+| @vyron/vhooks  | Vue composition api hooks |
+| @vyron/storage | Javascript storage utils  |
 
 ## License
 
