@@ -1,10 +1,10 @@
 /*
  * @Author: vyron
  * @Date: 2022-02-27 17:12:24
- * @LastEditTime: 2022-04-02 12:06:28
+ * @LastEditTime: 2022-06-26 23:21:02
  * @LastEditors: vyron
  * @Description: watch file and output files for dev
- * @FilePath: /j-utils/scripts/dev.js
+ * @FilePath: /utils/scripts/dev.js
  */
 const fs = require('fs')
 const path = require('path')

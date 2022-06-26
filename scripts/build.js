@@ -1,7 +1,7 @@
 /*
  * @Author: vyron
  * @Date: 2022-02-14 14:25:44
- * @LastEditTime: 2022-05-24 17:39:03
+ * @LastEditTime: 2022-06-27 14:55:24
  * @LastEditors: vyron
  * @Description: build and output files
  * @FilePath: /utils/scripts/build.js
@@ -24,7 +24,7 @@ const formats = args.formats || args.f // iief cjs es
 const sourceMap = args.sourcemap || args.s // sourcemap or not
 const buildTypes = args.types || args.t // generate [package].d.ts or not
 const packagesDir = path.resolve(__dirname, '../packages')
-const packages = fs.readdirSync(packagesDir)
+const packages = fs.readdirSync(packagesDir).filter(d => d !== 'global.d.ts')
 const commit = execa.sync('git', ['rev-parse', 'HEAD']).stdout.slice(0, 7)
 
 async function run() {
@@ -51,13 +51,14 @@ function checkAllSize(packages) {
 // rollup 打包
 async function build(package) {
   deleteTargetDist(package)
-  await await execa(
+  await execa(
     'rollup',
     [
       '-c',
       isWatch ? '-w' : '',
       '--environment',
       [
+        `__DEV__:${!isProd}`,
         `COMMIT:${commit}`,
         `TARGET:${package}`,
         `NODE_ENV:${isProd ? 'production' : 'development'}`,

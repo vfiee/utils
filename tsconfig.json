@@ -20,16 +20,13 @@
         ],
         "types": [
             "jest",
-            "node"
+            "node",
+            "crypto-js"
         ],
-        "rootDir": ".",
-        "paths": {
-            "@j-utils/*": [
-                "packages/*/src/index.ts"
-            ]
-        }
+        "rootDir": "."
     },
     "include": [
+        "packages/global.d.ts",
         "packages/*/src",
         "packages/*/__tests__"
     ]
