@@ -24,6 +24,7 @@
             "runtimeArgs": [
                 "run-script",
                 "test",
+                "storage",
                 "--clearCache"
             ],
             "runtimeExecutable": "npm",

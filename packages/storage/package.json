@@ -27,5 +27,8 @@
   "dependencies": {
     "@vyron/utils": "^0.1.1",
     "crypto-js": "^4.1.1"
+  },
+  "devDependencies": {
+    "jest-localstorage-mock": "^2.4.21"
   }
 }

@@ -7,6 +7,7 @@ module.exports = {
       sourceMap: true
     }
   },
+  setupFiles: ['jest-localstorage-mock'],
   // collectCoverage: true,
   coverageProvider: 'v8',
   coverageDirectory: 'coverage',
@@ -14,7 +15,9 @@ module.exports = {
   collectCoverageFrom: ['packages/**/**/*.ts'],
   moduleFileExtensions: ['js', 'ts'],
   moduleNameMapper: {
-    '@vyron/utils': '<rootDir>/packages/utils/src'
+    '@vyron/utils': '<rootDir>/packages/utils/src',
+    '@vyron/storage': '<rootDir>/packages/storage/src',
+    '@vyron/vhooks': '<rootDir>/packages/vhooks/src'
   },
   rootDir: __dirname,
   testMatch: ['<rootDir>/packages/**/__tests__/**/*spec.ts'],

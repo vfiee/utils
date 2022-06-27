@@ -1,7 +1,7 @@
 /*
  * @Author: vyron
  * @Date: 2022-05-19 17:57:31
- * @LastEditTime: 2022-06-27 14:59:11
+ * @LastEditTime: 2022-06-27 23:59:54
  * @LastEditors: vyron
  * @Description: 融合汇聚工具类导出
  * @FilePath: /utils/packages/storage/src/index.ts
@@ -158,7 +158,7 @@ class StorageCore {
     }
   }
   clear(excludes?: string | string[]): void {
-    if (this.size <= 0) return
+    if (this.length <= 0) return
     if (!excludes || excludes.length <= 0) {
       this.#storage.clear()
       return
@@ -174,7 +174,10 @@ class StorageCore {
     return getDataSize(values.toString())
   }
   key(index: number): string | null {
-    return this.#storage.key(index)
+    if (!this.length) return null
+    const key = this.#storage.key(index)
+    if (key === null || !this.#config.prefix) return key
+    return key.slice(this.#config.prefix.length)
   }
   keys(): string[] {
     return Object.keys(this.#storage)
@@ -196,8 +199,8 @@ class StorageCore {
           const { origin, expire } =
             JSON.parse(decrypt ? decrypt(value) : value) || {}
           if (Date.now() >= expire) {
-            const key = this.key(index)
-            this.remove(key!.slice(this.#config.prefix?.length ?? 0))
+            const key = this.key(index) as string
+            this.remove(key.slice(this.#config.prefix?.length ?? 0))
             return null
           }
           return origin
