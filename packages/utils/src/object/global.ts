@@ -8,20 +8,20 @@
  */
 
 const _globalThis =
-  typeof globalThis === 'object' &&
-  globalThis !== null &&
-  globalThis.Object === Object &&
-  globalThis
+	typeof globalThis === "object" &&
+	globalThis !== null &&
+	globalThis.Object === Object &&
+	globalThis
 
 const _self =
-  typeof self === 'object' && self !== null && self.Object === Object && self
+	typeof self === "object" && self !== null && self.Object === Object && self
 
 const _global =
-  typeof global === 'object' &&
-  global !== null &&
-  global.Object === Object &&
-  global
+	typeof global === "object" &&
+	global !== null &&
+	global.Object === Object &&
+	global
 
 export function getGlobalThis(): typeof globalThis {
-  return _globalThis || _global || _self || Function('return this')()
+	return _globalThis || _global || _self || Function("return this")()
 }

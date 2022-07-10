@@ -13,6 +13,6 @@
  * @returns {string} - The converted string
  */
 export function upperFirst(str: string): string {
-  if (!str) return str
-  return str.charAt(0).toUpperCase() + str.slice(1)
+	if (!str) return str
+	return str.charAt(0).toUpperCase() + str.slice(1)
 }

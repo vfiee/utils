@@ -16,10 +16,10 @@
  * @returns {number} - The random number between the minimum and maximum values.
  */
 export function random(
-  min: number = 0,
-  max: number = 1,
-  floating: boolean = false
+	min: number = 0,
+	max: number = 1,
+	floating: boolean = false
 ): number {
-  const number = Math.random() * (max - min + 1) + min
-  return floating ? number : Math.floor(number)
+	const number = Math.random() * (max - min + 1) + min
+	return floating ? number : Math.floor(number)
 }

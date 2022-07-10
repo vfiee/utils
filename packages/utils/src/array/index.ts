@@ -6,7 +6,7 @@
  * @Description: 数组常用方法
  * @FilePath: /utils/packages/utils/src/array/index.ts
  */
-import { isArray } from '../is'
+import { isArray } from "../is"
 
 /**
  * Get the first element of an array.
@@ -14,7 +14,7 @@ import { isArray } from '../is'
  * @returns {any} Returns the first element of `array`.
  */
 export function head<T = any>(array: T[]): T {
-  return array?.[0]
+	return array?.[0]
 }
 
 export const first = head
@@ -25,7 +25,7 @@ export const first = head
  * @returns {any} Returns the last element of `array`.
  */
 export function last<T = any>(array: T[]): T {
-  return array?.[array.length - 1]
+	return array?.[array.length - 1]
 }
 
 export const tail = last
@@ -36,7 +36,7 @@ export const tail = last
  * @returns {any[]} Returns the new array without falsy values
  */
 export function compact<T = any>(array: T[]): T[] {
-  return array.filter(Boolean)
+	return array.filter(Boolean)
 }
 
 /**
@@ -51,47 +51,47 @@ export function compact<T = any>(array: T[]): T[] {
  * chunk([1, 2, 3, 4, 5, 6, 7, 8], 4) // [[1, 2, 3, 4], [5, 6, 7, 8]]
  */
 export function chunk<T = any>(array: T[], size: number = 1): T[][] {
-  const result: T[][] = []
-  let index = 0
-  while (index < array.length) {
-    result.push(array.slice(index, index + size))
-    index += size
-  }
-  return result
+	const result: T[][] = []
+	let index = 0
+	while (index < array.length) {
+		result.push(array.slice(index, index + size))
+		index += size
+	}
+	return result
 }
 
 type FlatArray<Arr, Depth extends number> = {
-  done: Arr
-  recur: Arr extends ReadonlyArray<infer InnerArr>
-    ? FlatArray<
-        InnerArr,
-        [
-          -1,
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14,
-          15,
-          16,
-          17,
-          18,
-          19,
-          20
-        ][Depth]
-      >
-    : Arr
-}[Depth extends -1 ? 'done' : 'recur']
+	done: Arr
+	recur: Arr extends ReadonlyArray<infer InnerArr>
+		? FlatArray<
+				InnerArr,
+				[
+					-1,
+					0,
+					1,
+					2,
+					3,
+					4,
+					5,
+					6,
+					7,
+					8,
+					9,
+					10,
+					11,
+					12,
+					13,
+					14,
+					15,
+					16,
+					17,
+					18,
+					19,
+					20
+				][Depth]
+		  >
+		: Arr
+}[Depth extends -1 ? "done" : "recur"]
 
 /**
  * Flattens the array to the specified depth, return the flattened array
@@ -102,13 +102,13 @@ type FlatArray<Arr, Depth extends number> = {
  * flattenDepth([1, [2, [3, [4, [5]]]]]) // [1, 2, [3, [4, [5]]]]
  */
 export function flattenDepth<A, D extends number = 1>(
-  array: A,
-  depth: number = 1
+	array: A,
+	depth: number = 1
 ): FlatArray<A, D>[] {
-  if (!isArray(array) || depth < 1) return array as unknown as FlatArray<A, D>[]
-  return array.reduce((acc: FlatArray<A, D>[], val: any) => {
-    return acc.concat(isArray(val) ? flattenDepth(val, depth - 1) : val)
-  }, [])
+	if (!isArray(array) || depth < 1) return array as unknown as FlatArray<A, D>[]
+	return array.reduce((acc: FlatArray<A, D>[], val: any) => {
+		return acc.concat(isArray(val) ? flattenDepth(val, depth - 1) : val)
+	}, [])
 }
 
 /**
@@ -119,7 +119,7 @@ export function flattenDepth<A, D extends number = 1>(
  * flattenDeep([1, [2, [3, [4, [5]]]]]) // [1, 2, 3, 4, 5]
  */
 export function flattenDeep<A>(array: A): FlatArray<A, number>[] {
-  return flattenDepth<A, number>(array, (array as unknown as Array<any>).length)
+	return flattenDepth<A, number>(array, (array as unknown as Array<any>).length)
 }
 
 /**
@@ -130,5 +130,5 @@ export function flattenDeep<A>(array: A): FlatArray<A, number>[] {
  * flatten([1, [2, [3, [4, [5]]]]]) // [1, 2, [3, [4, [5]]]]
  */
 export function flatten<A>(array: A): FlatArray<A, number>[] {
-  return flattenDepth<A>(array)
+	return flattenDepth<A>(array)
 }

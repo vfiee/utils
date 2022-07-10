@@ -7,12 +7,12 @@
  * @FilePath: /utils/packages/utils/src/index.ts
  */
 
-export * from './object'
+export * from "./object"
 
-export * from './array'
+export * from "./array"
 
-export * from './is'
+export * from "./is"
 
-export * from './number'
+export * from "./number"
 
-export * from './string'
+export * from "./string"

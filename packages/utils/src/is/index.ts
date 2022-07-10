@@ -13,7 +13,7 @@
  * @returns {string} The type string, like "[object String]"
  */
 export function toTypeString(value: unknown): string {
-  return Object.prototype.toString.call(value)
+	return Object.prototype.toString.call(value)
 }
 
 /**
@@ -22,7 +22,7 @@ export function toTypeString(value: unknown): string {
  * @returns {string} The value type, like String | Boolean | Number | Array | Object | Function | RegExp | Date
  */
 export function toRawType(value: unknown): string {
-  return toTypeString(value).slice(8, -1)
+	return toTypeString(value).slice(8, -1)
 }
 
 /**
@@ -31,7 +31,7 @@ export function toRawType(value: unknown): string {
  * @returns {boolean} Returns true if value is a string, otherwise false
  */
 export function isString(value: unknown): value is string {
-  return typeof value === 'string'
+	return typeof value === "string"
 }
 
 /**
@@ -40,7 +40,7 @@ export function isString(value: unknown): value is string {
  * @returns {boolean} Returns true if value is a boolean, otherwise false
  */
 export function isBoolean(value: unknown): value is boolean {
-  return typeof value === 'boolean'
+	return typeof value === "boolean"
 }
 
 /**
@@ -49,7 +49,7 @@ export function isBoolean(value: unknown): value is boolean {
  * @returns {boolean} Returns true if value is a number, otherwise false
  */
 export function isNumber(value: unknown): value is number {
-  return typeof value === 'number'
+	return typeof value === "number"
 }
 
 /**
@@ -58,7 +58,7 @@ export function isNumber(value: unknown): value is number {
  * @returns {boolean} Returns true if value is a bigint, otherwise false
  */
 export function isBigInt(value: unknown): value is bigint {
-  return typeof value === 'bigint'
+	return typeof value === "bigint"
 }
 
 /**
@@ -67,7 +67,7 @@ export function isBigInt(value: unknown): value is bigint {
  * @returns {boolean} Returns true if value is a symbol, otherwise false
  */
 export function isSymbol(value: unknown): value is symbol {
-  return typeof value === 'symbol'
+	return typeof value === "symbol"
 }
 
 /**
@@ -76,7 +76,7 @@ export function isSymbol(value: unknown): value is symbol {
  * @returns {boolean} Returns true if value is a null, otherwise false
  */
 export function isNull(value: unknown): value is null {
-  return value === null
+	return value === null
 }
 
 /**
@@ -85,7 +85,7 @@ export function isNull(value: unknown): value is null {
  * @returns {boolean} Returns true if value is a undefined, otherwise false
  */
 export function isUndefined(value: unknown): value is null {
-  return value === undefined
+	return value === undefined
 }
 
 /**
@@ -106,7 +106,7 @@ export const isArray = Array.isArray
  *
  */
 export function isObject(value: unknown): value is object {
-  return typeof value === 'object' && value !== null
+	return typeof value === "object" && value !== null
 }
 
 /**
@@ -120,7 +120,7 @@ export function isObject(value: unknown): value is object {
  *
  */
 export function isFunction(value: unknown): boolean {
-  return typeof value === 'function'
+	return typeof value === "function"
 }
 
 /**
@@ -129,7 +129,7 @@ export function isFunction(value: unknown): boolean {
  * @returns {boolean} Returns true if value is a RegExp, otherwise false
  */
 export function isRegExp(value: unknown): value is RegExp {
-  return toRawType(value) === 'RegExp'
+	return toRawType(value) === "RegExp"
 }
 
 /**
@@ -138,7 +138,7 @@ export function isRegExp(value: unknown): value is RegExp {
  * @returns {boolean} Returns true if value is a Date, otherwise false
  */
 export function isDate(value: unknown): value is Date {
-  return toRawType(value) === 'Date'
+	return toRawType(value) === "Date"
 }
 
 /**
@@ -147,7 +147,7 @@ export function isDate(value: unknown): value is Date {
  * @returns {boolean} Returns true if value is Arguments, otherwise false
  */
 export function isArguments(value: unknown): boolean {
-  return toRawType(value) === 'Arguments'
+	return toRawType(value) === "Arguments"
 }
 
 /**
@@ -157,13 +157,13 @@ export function isArguments(value: unknown): boolean {
  * @returns {boolean} Returns true if value is a Map, otherwise false
  */
 export function isMap(
-  value: unknown,
-  allowWeakMap: boolean = false
+	value: unknown,
+	allowWeakMap: boolean = false
 ): value is Map<any, any> {
-  const rawType = toRawType(value)
-  return allowWeakMap
-    ? rawType === 'WeakMap' || rawType === 'Map'
-    : rawType === 'Map'
+	const rawType = toRawType(value)
+	return allowWeakMap
+		? rawType === "WeakMap" || rawType === "Map"
+		: rawType === "Map"
 }
 
 /**
@@ -172,7 +172,7 @@ export function isMap(
  * @returns {boolean} Returns true if value is a WeakMap, otherwise false
  */
 export function isWeakMap(value: unknown): value is WeakMap<object, any> {
-  return toRawType(value) === 'WeakMap'
+	return toRawType(value) === "WeakMap"
 }
 
 /**
@@ -181,7 +181,7 @@ export function isWeakMap(value: unknown): value is WeakMap<object, any> {
  * @returns {boolean} Returns true if value is a Set, otherwise false
  */
 export function isSet(value: unknown): value is Set<any> {
-  return toRawType(value) === 'Set'
+	return toRawType(value) === "Set"
 }
 
 /**
@@ -190,7 +190,7 @@ export function isSet(value: unknown): value is Set<any> {
  * @returns {boolean} Returns true if value is a WeakSet, otherwise false
  */
 export function isWeakSet(value: unknown): value is WeakSet<object> {
-  return toRawType(value) === 'WeakSet'
+	return toRawType(value) === "WeakSet"
 }
 
 /**
@@ -199,7 +199,7 @@ export function isWeakSet(value: unknown): value is WeakSet<object> {
  * @returns {boolean} Returns true if value is NaN, otherwise false
  */
 export function isNaN(value: unknown): boolean {
-  return value !== value
+	return value !== value
 }
 
 /**
@@ -208,7 +208,7 @@ export function isNaN(value: unknown): boolean {
  * @returns {boolean} Returns true if value is null or undefined, otherwise false
  */
 export function isNil(value: unknown): boolean {
-  return value === null || value === undefined
+	return value === null || value === undefined
 }
 
 /**
@@ -219,7 +219,7 @@ export function isNil(value: unknown): boolean {
  * @link https://developer.mozilla.org/en-US/docs/Glossary/Falsy
  */
 export function isFalsy(value: unknown): boolean {
-  return !!value === false
+	return !!value === false
 }
 
 /**
@@ -230,7 +230,7 @@ export function isFalsy(value: unknown): boolean {
  * @link https://developer.mozilla.org/en-US/docs/Glossary/Truthy
  */
 export function isTruthy(value: unknown): boolean {
-  return !isFalsy(value)
+	return !isFalsy(value)
 }
 
 /**
@@ -240,7 +240,7 @@ export function isTruthy(value: unknown): boolean {
  */
 const MAX_SAFE_INTEGER = 9007199254740991
 export function isLength(value: unknown): boolean {
-  return isNumber(value) && value >= 0 && value <= MAX_SAFE_INTEGER
+	return isNumber(value) && value >= 0 && value <= MAX_SAFE_INTEGER
 }
 
 /**
@@ -251,10 +251,10 @@ export function isLength(value: unknown): boolean {
  * typeof null === "object", but we consider it as primitive value because it is not a truthy object
  */
 export function isPrimitive(value: unknown): boolean {
-  return (
-    isNil(value) ||
-    ['string', 'number', 'boolean', 'symbol', 'bigint'].includes(typeof value)
-  )
+	return (
+		isNil(value) ||
+		["string", "number", "boolean", "symbol", "bigint"].includes(typeof value)
+	)
 }
 
 /**
@@ -263,19 +263,19 @@ export function isPrimitive(value: unknown): boolean {
  * @returns {boolean} Returns true if value is array like, otherwise false
  */
 export function isArrayLike(value: unknown): boolean {
-  return (
-    value != null &&
-    !isFunction(value) &&
-    isLength((value as Array<any>)?.length)
-  )
+	return (
+		value != null &&
+		!isFunction(value) &&
+		isLength((value as Array<any>)?.length)
+	)
 }
 
 function isPrototype(value: unknown): boolean {
-  const Constructor = value && (value as any).constructor
-  const proto =
-    (typeof Constructor === 'function' && Constructor.prototype) ||
-    Object.prototype
-  return value === proto
+	const Constructor = value && (value as any).constructor
+	const proto =
+		(typeof Constructor === "function" && Constructor.prototype) ||
+		Object.prototype
+	return value === proto
 }
 
 /**
@@ -297,24 +297,24 @@ function isPrototype(value: unknown): boolean {
  * isEmpty(Object.prototype) // return true
  */
 export function isEmpty(value: unknown): boolean {
-  if (value == null) return true
-  const rawType = toRawType(value)
-  if (rawType === 'Set' || rawType === 'Map') {
-    return !(value as Set<any> | Map<any, any>).size
-  } else if (
-    isArrayLike(value) &&
-    (isArray(value) || isArguments(value) || typeof value === 'string')
-  ) {
-    return !(value as string | Array<unknown>).length
-  } else if (isPrototype(value)) {
-    return !Object.keys(value as object).length
-  }
-  for (const key in value as object) {
-    if (Object.prototype.hasOwnProperty.call(value, key)) {
-      return false
-    }
-  }
-  return true
+	if (value == null) return true
+	const rawType = toRawType(value)
+	if (rawType === "Set" || rawType === "Map") {
+		return !(value as Set<any> | Map<any, any>).size
+	} else if (
+		isArrayLike(value) &&
+		(isArray(value) || isArguments(value) || typeof value === "string")
+	) {
+		return !(value as string | Array<unknown>).length
+	} else if (isPrototype(value)) {
+		return !Object.keys(value as object).length
+	}
+	for (const key in value as object) {
+		if (Object.prototype.hasOwnProperty.call(value, key)) {
+			return false
+		}
+	}
+	return true
 }
 
 /**
@@ -323,11 +323,11 @@ export function isEmpty(value: unknown): boolean {
  * @returns {boolean} Returns true if the value is an instance of URLSearchParams, otherwise false
  */
 export function isUrlSearchParams(value: unknown): value is URLSearchParams {
-  return (
-    !!value &&
-    typeof URLSearchParams === 'function' &&
-    value instanceof URLSearchParams
-  )
+	return (
+		!!value &&
+		typeof URLSearchParams === "function" &&
+		value instanceof URLSearchParams
+	)
 }
 
 /**
@@ -336,7 +336,7 @@ export function isUrlSearchParams(value: unknown): value is URLSearchParams {
  * @returns {boolean} Returns true if the value is an instance of FormData, otherwise false
  */
 export function isFormData(value: unknown): value is FormData {
-  return !!value && typeof FormData === 'function' && value instanceof FormData
+	return !!value && typeof FormData === "function" && value instanceof FormData
 }
 
 /**
@@ -345,7 +345,7 @@ export function isFormData(value: unknown): value is FormData {
  * @returns {boolean} Returns true if value is a File, otherwise false
  */
 export function isFile(value: unknown): value is File {
-  return toRawType(value) === 'File'
+	return toRawType(value) === "File"
 }
 
 /**
@@ -354,7 +354,7 @@ export function isFile(value: unknown): value is File {
  * @returns {boolean} Returns true if value is a Blob, otherwise false
  */
 export function isBlob(value: unknown): value is Blob {
-  return toRawType(value) === 'Blob'
+	return toRawType(value) === "Blob"
 }
 
 /**
@@ -363,7 +363,7 @@ export function isBlob(value: unknown): value is Blob {
  * @returns {boolean} Returns true if value is Stream, otherwise false
  */
 export function isStream(value: unknown): boolean {
-  return isObject(value) && isFunction((value as any)?.pipe)
+	return isObject(value) && isFunction((value as any)?.pipe)
 }
 
 /**
@@ -372,11 +372,11 @@ export function isStream(value: unknown): boolean {
  * @returns {boolean} Returns true if value is ArrayBufferView, otherwise false
  */
 export function isArrayBufferView(value: unknown): value is ArrayBufferView {
-  if (!value) return false
-  if (isFunction(ArrayBuffer) && ArrayBuffer.isView)
-    return ArrayBuffer.isView(value)
-  const buffer = (value as any)?.buffer
-  return buffer && buffer instanceof ArrayBuffer
+	if (!value) return false
+	if (isFunction(ArrayBuffer) && ArrayBuffer.isView)
+		return ArrayBuffer.isView(value)
+	const buffer = (value as any)?.buffer
+	return buffer && buffer instanceof ArrayBuffer
 }
 
 /**
@@ -385,5 +385,5 @@ export function isArrayBufferView(value: unknown): value is ArrayBufferView {
  * @returns {boolean} Returns true if value is isArrayBuffer, otherwise false
  */
 export function isArrayBuffer(value: unknown): value is ArrayBuffer {
-  return toRawType(value) === 'ArrayBuffer'
+	return toRawType(value) === "ArrayBuffer"
 }
