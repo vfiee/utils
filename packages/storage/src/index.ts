@@ -1,7 +1,7 @@
 /*
  * @Author: vyron
  * @Date: 2022-05-19 17:57:31
- * @LastEditTime: 2022-07-12 11:17:28
+ * @LastEditTime: 2022-07-12 18:02:59
  * @LastEditors: vyron
  * @Description: 融合汇聚工具类导出
  * @FilePath: /utils/packages/storage/src/index.ts
@@ -94,7 +94,7 @@ class StorageCore {
 	set(key: string, value: any, expire?: string | number | Date): boolean {
 		let success = false
 		try {
-			let storageData: StorageData = { origin: value }
+			const storageData: StorageData = { origin: value }
 			if (expire) {
 				storageData["expire"] = this.#getTimestampByExpire(expire)
 			}
