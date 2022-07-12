@@ -23,8 +23,8 @@
       "prettier --write"
     ],
     "*.ts?(x)": [
-      "eslint",
-      "prettier --parser=typescript --write"
+      "pnpm run lint",
+      "pnpm run format"
     ]
   },
   "repository": {
