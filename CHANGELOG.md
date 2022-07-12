@@ -1,3 +1,26 @@
+## [0.1.2](https://github.com/VFiee/utils/compare/v0.1.0...v0.1.2) (2022-07-12)
+
+
+### Bug Fixes
+
+* fix type error ([ac86160](https://github.com/VFiee/utils/commit/ac86160f241d3210b877806045fac7301773f1a0))
+
+
+### Features
+
+* **storage:** 新增 storage 包 ([cdb8526](https://github.com/VFiee/utils/commit/cdb8526cda71cbbb81230d57789640f9ebc12521))
+* **storage:** 新增 storage 包 ([295f0ba](https://github.com/VFiee/utils/commit/295f0ba4bbae54fd70157cb1b2c9a305d97ea8e9))
+* **storage:** init storage package ([a2ace7b](https://github.com/VFiee/utils/commit/a2ace7b3c1d11f78561219c9c6cd651ebf9cb58c))
+* **utils:** 新增 utils 方法 ([611f73a](https://github.com/VFiee/utils/commit/611f73a8054e7e612244e44c671b9205dcaa1b21))
+* **utils:** 新增 utils 方法 ([da9bf29](https://github.com/VFiee/utils/commit/da9bf2999f40fe5c940dfcbb3b95ec230289551f))
+
+
+### Reverts
+
+* **utils:** 还原package.json ([764bd99](https://github.com/VFiee/utils/commit/764bd995eb61e9b06529091ccc5dd03d90f95c30))
+
+
+
 ## [0.1.1](https://github.com/VFiee/utils/compare/v0.1.0...v0.1.1) (2022-06-02)
 
 

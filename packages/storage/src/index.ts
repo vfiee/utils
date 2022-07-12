@@ -200,4 +200,3 @@ export class SessionStorage extends StorageCore {
 		super(sessionStorage, config)
 	}
 }
-
