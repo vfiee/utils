@@ -1,7 +1,7 @@
 /*
  * @Author: vyron
  * @Date: 2022-05-19 17:57:31
- * @LastEditTime: 2022-07-11 18:39:56
+ * @LastEditTime: 2022-07-12 11:17:28
  * @LastEditors: vyron
  * @Description: 融合汇聚工具类导出
  * @FilePath: /utils/packages/storage/src/index.ts
@@ -21,67 +21,41 @@ export interface StorageCryptoConfig {
 }
 
 export interface StorageConfig {
+	prefix?: string
 	enableCrypto?: boolean
 	crypto?: StorageCryptoConfig
-	expire?: string | number | Date
-	prefix?: string
 }
 
 export interface StorageData<T = any> {
 	expire?: number
 	origin: T
 }
+const $cryptoKey = encUtf8.parse("storage_encrypt_key")
+const $cryptoIv = encUtf8.parse("storage_encrypt_iv")
 
-const $encryptKey = encUtf8.parse("storage_encrypt_key")
-const $encryptIv = encUtf8.parse("storage_encrypt_iv")
-
-const defaultStorageConfig: StorageConfig = {
+const $defaultStorageConfig: StorageConfig = {
 	enableCrypto: false,
 	crypto: {
 		encrypt: function encrypt(value: string): string {
 			if (!value) return value
-			const data = AES.encrypt(encUtf8.parse(value), $encryptKey, {
-				iv: $encryptIv,
+			const data = AES.encrypt(encUtf8.parse(value), $cryptoKey, {
+				iv: $cryptoIv,
 				mode: modCfb,
 				padding: padPkcs7
 			})
 			return data.ciphertext.toString()
 		},
 		decrypt: function decrypt(value: string): any {
-			return AES.decrypt(
-				encBase64.stringify(encHex.parse(value)),
-				$encryptKey,
-				{
-					iv: $encryptIv,
-					mode: modCfb,
-					padding: padPkcs7
-				}
-			).toString(encUtf8)
+			return AES.decrypt(encBase64.stringify(encHex.parse(value)), $cryptoKey, {
+				iv: $cryptoIv,
+				mode: modCfb,
+				padding: padPkcs7
+			}).toString(encUtf8)
 		}
 	}
 }
 
-function $getTimestampByExpire(expire?: StorageConfig["expire"]): number {
-	if (isNil(expire)) return 0
-	if (isString(expire)) {
-		try {
-			return new Date(expire).getTime()
-		} catch (error) {
-			warn(error)
-			return 0
-		}
-	}
-	if (isDate(expire)) {
-		return expire.getTime()
-	}
-	if (isNumber(expire)) {
-		const now = +new Date()
-		return now + expire * 1000
-	}
-	return 0
-}
-
-function warn(message: any): void {
+function $warn(message: any): void {
 	console.warn("[Storage Warn]:", message)
 }
 
@@ -90,7 +64,7 @@ class StorageCore {
 	#storage: Storage
 	constructor(storage: Storage, config?: StorageConfig) {
 		this.#storage = storage
-		this.#config = Object.assign({}, defaultStorageConfig, config)
+		this.#config = Object.assign({}, $defaultStorageConfig, config)
 	}
 	get(key: string): any | null {
 		if (!key || this.length <= 0) return null
@@ -113,18 +87,16 @@ class StorageCore {
 				return origin
 			}
 		} catch (error) {
-			warn(error)
+			$warn(error)
 		}
 		return data
 	}
-	set(key: string, value: any, expire?: StorageConfig["expire"]): boolean {
+	set(key: string, value: any, expire?: string | number | Date): boolean {
 		let success = false
 		try {
-			let storageData: StorageData = {
-				origin: value
-			}
+			let storageData: StorageData = { origin: value }
 			if (expire) {
-				storageData["expire"] = $getTimestampByExpire(expire)
+				storageData["expire"] = this.#getTimestampByExpire(expire)
 			}
 			let data = JSON.stringify(storageData)
 			const { enableCrypto, crypto } = this.#config
@@ -134,7 +106,7 @@ class StorageCore {
 			this.#storage.setItem(this.#prefixKey(key), data)
 			success = true
 		} catch (error) {
-			warn(error)
+			$warn(error)
 			success = false
 		}
 		return success
@@ -168,7 +140,6 @@ class StorageCore {
 	get size(): number {
 		if (this.isEmpty) return 0
 		const data = this.values().toString()
-
 		if (!(data && data.length)) return 0
 		let total = 0
 		let index = -1
@@ -196,6 +167,25 @@ class StorageCore {
 	}
 	#unPrefixKey(key: string): string {
 		return this.#config.prefix ? key.slice(this.#config.prefix.length) : key
+	}
+	#getTimestampByExpire(expire?: string | number | Date): number {
+		if (isNil(expire)) return 0
+		if (isString(expire) && expire.length > 0) {
+			try {
+				return new Date(expire).getTime()
+			} catch (error) {
+				$warn(error)
+				return 0
+			}
+		}
+		if (isDate(expire)) {
+			return expire.getTime()
+		}
+		if (isNumber(expire)) {
+			const now = +new Date()
+			return now + expire * 1000
+		}
+		return 0
 	}
 }
 
