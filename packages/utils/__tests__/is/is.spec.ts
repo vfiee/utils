@@ -331,9 +331,7 @@ describe("is", () => {
 	test("isStream", () => {
 		const filePath = path.join(__dirname, "../../package.json")
 		const readStream = fs.createReadStream(filePath)
-		const writeStream = fs.createWriteStream(filePath)
 		expect(isStream(readStream)).toBe(true)
-		expect(isStream(writeStream)).toBe(true)
 	})
 
 	test("isArrayBuffer", () => {
