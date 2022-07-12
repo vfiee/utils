@@ -1,7 +1,7 @@
 /*
  * @Author: vyron
  * @Date: 2022-02-14 14:25:44
- * @LastEditTime: 2022-06-27 14:55:24
+ * @LastEditTime: 2022-07-12 15:06:40
  * @LastEditors: vyron
  * @Description: build and output files
  * @FilePath: /utils/scripts/build.js
@@ -24,7 +24,7 @@ const formats = args.formats || args.f // iief cjs es
 const sourceMap = args.sourcemap || args.s // sourcemap or not
 const buildTypes = args.types || args.t // generate [package].d.ts or not
 const packagesDir = path.resolve(__dirname, "../packages")
-const packages = fs.readdirSync(packagesDir).filter(d => d !== "global.d.ts")
+const packages = fs.readdirSync(packagesDir).filter(dir => !dir.includes("."))
 const commit = execa.sync("git", ["rev-parse", "HEAD"]).stdout.slice(0, 7)
 
 async function run() {

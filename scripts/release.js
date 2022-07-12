@@ -9,8 +9,12 @@ const ora = require("ora")
 const execa = require("execa")
 const get = require("lodash.get")
 const set = require("lodash.set")
-const packageJson = require("package-json")
+// const packageJson = require("package-json")
 const pkgDir = path.resolve(__dirname, "../packages")
+const packages = fs.readdirSync(pkgDir).filter(dir => !dir.includes("."))
+
+// 存储共享变量
+const STORE = {}
 
 /**
  * 软件版本周期
@@ -79,6 +83,21 @@ const checkCurrentBranch = async () => {
 	spinner.succeed(`Current branch is ${branch}!`)
 }
 
+const selectPackages = async () => {
+	let { packages: selectedPackages } = await prompt({
+		name: "packages",
+		type: "select",
+		message: "select release packages!",
+		choices: packages.concat("all")
+	})
+	if (selectedPackages === "all") {
+		selectedPackages = packages
+	} else {
+		selectedPackages = [selectedPackages]
+	}
+	STORE["selectedPackages"] = selectedPackages
+}
+
 // 2. 单元测试
 const runTest = () => run("pnpm", ["run", "test"])
 
@@ -125,6 +144,7 @@ const chooseVersion = async () => {
 	if (!isRelease) {
 		throw new Error(`Release version ${targetVersion} is canceled!`)
 	}
+	STORE["version"] = targetVersion
 	return targetVersion
 }
 
@@ -138,7 +158,6 @@ const updateVersion = async version => {
 }
 
 const updatePackagesPkg = version => {
-	const packages = fs.readdirSync(pkgDir)
 	const updatedDependencies = dependencies => {
 		return Object.keys(dependencies).reduce((acc, dependency) => {
 			if (dependency.startsWith("@vyron/")) {
@@ -162,7 +181,12 @@ const updatePackagesPkg = version => {
 const buildPackage = async () => {
 	const spinner = progress(`Building packages`).start()
 	try {
-		await run("pnpm", ["build"], { stdio: "ignore" })
+		const { selectedPackages } = STORE
+		await run(
+			"pnpm",
+			["run", "build", "--package", selectedPackages.join(",")],
+			{ stdio: "ignore" }
+		)
 		spinner.succeed("Build successfully")
 	} catch (error) {
 		spinner.fail("Build failed")
@@ -205,46 +229,56 @@ const commitChanges = async () => {
 
 // 9.发布到npm
 const publishPackages = async () => {
-	const packages = fs.readdirSync(pkgDir)
-	for (const package of packages) {
-		await publishPackage(package)
-	}
+	const { selectedPackages, version } = STORE
+	const packageArgs = selectedPackages.reduce((acc, package) => {
+		acc.push("--filter", package)
+		return acc
+	}, [])
+	const releaseTag = getReleaseTag(version)
+	await run("pnpm", [
+		"publish",
+		"--access",
+		"public",
+		...(releaseTag ? ["--tag", releaseTag] : []),
+		// "--dry-run",
+		...packageArgs
+	])
 }
 
 // 6. 发布到 npm
-const publishPackage = async package => {
-	const { name, version, skipRelease } = getPkg(
-		null,
-		path.resolve(pkgDir, `${package}/package.json`)
-	)
-	if (skipRelease) return
-	const { version: npmVersion } =
-		(await packageJson(name).catch(() => ({}))) || {}
-	if (semver.valid(npmVersion) && semver.lte(version, npmVersion)) return
-	const releaseTag = getReleaseTag(version)
-	const spinner = progress("Publishing to npm").start()
-	try {
-		await run(
-			"yarn",
-			[
-				"publish",
-				"--new-version",
-				version,
-				...(releaseTag ? ["--tag", releaseTag] : []),
-				"--access",
-				"public"
-			],
-			{
-				stdio: "pipe",
-				cwd: path.resolve(pkgDir, package)
-			}
-		)
-		spinner.succeed(`Successfully publish ${name}@${version}`)
-	} catch (e) {
-		spinner.fail(`Publish failed, error: ${e}`)
-		throw e
-	}
-}
+// const publishPackage = async package => {
+// 	const { name, version, skipRelease } = getPkg(
+// 		null,
+// 		path.resolve(pkgDir, `${package}/package.json`)
+// 	)
+// 	if (skipRelease) return
+// 	const { version: npmVersion } =
+// 		(await packageJson(name).catch(() => ({}))) || {}
+// 	if (semver.valid(npmVersion) && semver.lte(version, npmVersion)) return
+// 	const releaseTag = getReleaseTag(version)
+// 	const spinner = progress("Publishing to npm").start()
+// 	try {
+// 		await run(
+// 			"yarn",
+// 			[
+// 				"publish",
+// 				"--new-version",
+// 				version,
+// 				...(releaseTag ? ["--tag", releaseTag] : []),
+// 				"--access",
+// 				"public"
+// 			],
+// 			{
+// 				stdio: "pipe",
+// 				cwd: path.resolve(pkgDir, package)
+// 			}
+// 		)
+// 		spinner.succeed(`Successfully publish ${name}@${version}`)
+// 	} catch (e) {
+// 		spinner.fail(`Publish failed, error: ${e}`)
+// 		throw e
+// 	}
+// }
 
 // 10.推送到 github
 const publishToGithub = async () => {
@@ -290,6 +324,7 @@ const release = () =>
 		.then(runFormatAndEslint)
 		.then(chooseVersion)
 		.then(updateVersion)
+		.then(selectPackages)
 		.then(buildPackage)
 		.then(generateChangeLog)
 		.then(commitChanges)
