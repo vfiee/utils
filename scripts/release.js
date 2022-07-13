@@ -9,7 +9,7 @@ const ora = require("ora")
 const execa = require("execa")
 const get = require("lodash.get")
 const set = require("lodash.set")
-// const packageJson = require("package-json")
+const packageJson = require("package-json")
 const pkgDir = path.resolve(__dirname, "../packages")
 const packages = fs.readdirSync(pkgDir).filter(dir => !dir.includes("."))
 
@@ -229,56 +229,57 @@ const commitChanges = async () => {
 
 // 9.发布到npm
 const publishPackages = async () => {
-	const { selectedPackages, version } = STORE
-	const packageArgs = selectedPackages.reduce((acc, package) => {
-		acc.push("--filter", package)
-		return acc
-	}, [])
-	const releaseTag = getReleaseTag(version)
-	await run("pnpm", [
-		"publish",
-		"--access",
-		"public",
-		...(releaseTag ? ["--tag", releaseTag] : []),
-		// "--dry-run",
-		...packageArgs
-	])
+	const { selectedPackages } = STORE
+	Promise.all(selectedPackages.map(package => publishPackage(package)))
+	// const packageArgs = selectedPackages.reduce((acc, package) => {
+	// 	acc.push("--filter", package)
+	// 	return acc
+	// }, [])
+	// const releaseTag = getReleaseTag(version)
+	// await run("pnpm", [
+	// 	"publish",
+	// 	"--access",
+	// 	"public",
+	// 	...(releaseTag ? ["--tag", releaseTag] : []),
+	// 	// "--dry-run",
+	// 	...packageArgs
+	// ])
 }
 
 // 6. 发布到 npm
-// const publishPackage = async package => {
-// 	const { name, version, skipRelease } = getPkg(
-// 		null,
-// 		path.resolve(pkgDir, `${package}/package.json`)
-// 	)
-// 	if (skipRelease) return
-// 	const { version: npmVersion } =
-// 		(await packageJson(name).catch(() => ({}))) || {}
-// 	if (semver.valid(npmVersion) && semver.lte(version, npmVersion)) return
-// 	const releaseTag = getReleaseTag(version)
-// 	const spinner = progress("Publishing to npm").start()
-// 	try {
-// 		await run(
-// 			"yarn",
-// 			[
-// 				"publish",
-// 				"--new-version",
-// 				version,
-// 				...(releaseTag ? ["--tag", releaseTag] : []),
-// 				"--access",
-// 				"public"
-// 			],
-// 			{
-// 				stdio: "pipe",
-// 				cwd: path.resolve(pkgDir, package)
-// 			}
-// 		)
-// 		spinner.succeed(`Successfully publish ${name}@${version}`)
-// 	} catch (e) {
-// 		spinner.fail(`Publish failed, error: ${e}`)
-// 		throw e
-// 	}
-// }
+const publishPackage = async package => {
+	const { name, version, skipRelease } = getPkg(
+		null,
+		path.resolve(pkgDir, `${package}/package.json`)
+	)
+	if (skipRelease) return
+	const { version: npmVersion } =
+		(await packageJson(name).catch(() => ({}))) || {}
+	if (semver.valid(npmVersion) && semver.lte(version, npmVersion)) return
+	const releaseTag = getReleaseTag(version)
+	const spinner = progress("Publishing to npm").start()
+	try {
+		await run(
+			"yarn",
+			[
+				"publish",
+				"--new-version",
+				version,
+				...(releaseTag ? ["--tag", releaseTag] : []),
+				"--access",
+				"public"
+			],
+			{
+				stdio: "pipe",
+				cwd: path.resolve(pkgDir, package)
+			}
+		)
+		spinner.succeed(`Successfully publish ${name}@${version}`)
+	} catch (e) {
+		spinner.fail(`Publish failed, error: ${e}`)
+		throw e
+	}
+}
 
 // 10.推送到 github
 const publishToGithub = async () => {
