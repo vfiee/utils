@@ -4,7 +4,7 @@ const path = require("path")
 const chalk = require("chalk")
 const semver = require("semver")
 const currentVersion = require("../package.json").version
-const { prompt } = require("enquirer")
+const { prompt, MultiSelect } = require("enquirer")
 const ora = require("ora")
 const execa = require("execa")
 const get = require("lodash.get")
@@ -84,16 +84,16 @@ const checkCurrentBranch = async () => {
 }
 
 const selectPackages = async () => {
-	let { packages: selectedPackages } = await prompt({
+	const prompt = new MultiSelect({
 		name: "packages",
-		type: "select",
 		message: "select release packages!",
 		choices: packages.concat("all")
 	})
-	if (selectedPackages === "all") {
+	let selectedPackages = await prompt.run()
+	if (selectedPackages.length <= 0)
+		throw Error("Select at least one release package")
+	if (selectedPackages.includes("all")) {
 		selectedPackages = packages
-	} else {
-		selectedPackages = [selectedPackages]
 	}
 	STORE["selectedPackages"] = selectedPackages
 }
@@ -158,9 +158,9 @@ const updateVersion = async version => {
 }
 
 const updatePackagesPkg = version => {
-	const updatedDependencies = dependencies => {
+	const updatedDependencies = (package, dependencies) => {
 		return Object.keys(dependencies).reduce((acc, dependency) => {
-			if (dependency.startsWith("@vyron/")) {
+			if (dependency.startsWith(`@vyron/${package}`)) {
 				acc[dependency] = version
 			}
 			return acc
@@ -171,7 +171,7 @@ const updatePackagesPkg = version => {
 		const { dependencies } = require(pkgPath)
 		const pkg = { version }
 		if (dependencies) {
-			pkg["dependencies"] = updatedDependencies(dependencies)
+			pkg["dependencies"] = updatedDependencies(package, dependencies)
 		}
 		updatePkg(pkg, pkgPath)
 	})
